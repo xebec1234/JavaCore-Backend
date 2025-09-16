@@ -5,7 +5,8 @@ import morgan from "morgan"
 import compression from "compression"
 import cookieParser from "cookie-parser"
 
-import userRoute from "./routes/auth.route"
+import authRoute from "./routes/auth.route"
+import userRoute from "./routes/user.route"
 
 const app = express()
 const port = process.env.PORT || 8080
@@ -20,7 +21,8 @@ app.use(morgan('dev'));
 app.use(compression());
 app.use(cookieParser());
 
-app.use("/api/user", userRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
 
 app.get('/sample', (req, res) => {
     res.json({ message: "test"}).status(200)

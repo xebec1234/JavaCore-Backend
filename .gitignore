@@ -3,3 +3,22 @@ prisma/generated/
 
 # env files (can opt-in for committing if needed)
 .env
+
+runtime
+client.d.ts
+client.js
+default.d.ts
+default.js
+edge.d.ts
+edge.js
+index-browser.js
+index.d.ts
+index.js
+prisma/package.json
+query_engine_bg.js
+query_engine_bg.wasm
+query_engine-windows.dll.node
+wasm-edge-light-loader.mjs
+wasm-worker-loader.mjs
+wasm.d.ts
+wasm.js

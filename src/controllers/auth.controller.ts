@@ -21,10 +21,10 @@ export const register = async (req: Request, res: Response) => {
             }
         });
         
-        res.status(201).json({ message: "Register User Succesfully" });
+        res.status(201).json({ message: "Register User Succesfully", success: true });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error", success: false });
     }
 }
 
@@ -49,7 +49,7 @@ export const login = async (req: Request, res: Response) => {
 
         const token = jwt.sign({id: user.id, role: user.role}, SECRET_KEY, { expiresIn: "1h"})
 
-        const { password: _password, emailVerified: _emailVerified, ...safeUser } = user;
+        const { password: _password, emailVerified: _emailVerified, id: _id, ...safeUser } = user;
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -58,10 +58,10 @@ export const login = async (req: Request, res: Response) => {
             maxAge: 60 * 60 * 1000,
         });
         
-        res.status(200).json({ user: safeUser, message: "Login Successfull!" })
+        res.status(200).json({ user: safeUser, message: "Login Successfull!", success: true })
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error", success: false });
     }
 }
 
@@ -73,9 +73,9 @@ export const logout = async (req, res) => {
             sameSite: "strict",
         });
 
-        res.status(200).json({ message: "Logout successful" });
+        res.status(200).json({ message: "Logout successful", success: true });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error", success: false });
     }
 }

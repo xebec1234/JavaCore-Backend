@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/prisma"
+  output   = "../prisma"
 }
 
 datasource db {
@@ -20,11 +20,9 @@ model User {
   // otpExpires    DateTime?
   // otpCooldown   DateTime?
 
-  // accounts              Account[]
-  // sessions              Session[]
+  jobs Job[]
   // verifiedDevices       VerifiedDevice[]
   // RouteComponentDetails RouteComponentDetails[]
-  jobs Job[]
   // RouteList             RouteList[]
   // RouteComponentImage   RouteComponentImage[]
   // RouteComponentFigures RouteComponentFigures[]
@@ -65,4 +63,58 @@ model Job {
   // routeList RouteList @relation(fields: [inspectionRoute], references: [id], onDelete: Cascade)
 
   @@map("jobs")
+}
+
+model Area {
+  id       String  @id @default(cuid())
+  name     String
+  isDelete Boolean @default(false)
+
+  equipmentGroups EquipmentGroup[]
+  // RouteMachineList RouteMachineList[]
+
+  @@map("area")
+}
+
+model EquipmentGroup {
+  id       String  @id @default(cuid())
+  name     String
+  areaId   String?
+  isDelete Boolean @default(false)
+
+  area           Area?           @relation(fields: [areaId], references: [id], onDelete: Cascade)
+  equipmentNames EquipmentName[]
+  // RouteMachineList RouteMachineList[]
+
+  @@map("equipmentgroup")
+}
+
+model EquipmentName {
+  id       String  @id @default(cuid())
+  name     String
+  groupId  String?
+  isDelete Boolean @default(false)
+
+  group      EquipmentGroup? @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  components Component[]
+  // RouteEquipmentName RouteEquipmentName[]
+
+  @@map("equipmentname")
+}
+
+model Component {
+  id              String  @id @default(cuid())
+  name            String
+  equipmentNameId String?
+  isDelete        Boolean @default(false)
+
+  equipmentName EquipmentName? @relation(fields: [equipmentNameId], references: [id], onDelete: Cascade)
+  // routeComponent        RouteComponent[]
+  // RouteComponentDetails RouteComponentDetails[]
+  // RouteComponentImage   RouteComponentImage[]
+  // RouteComponentFigures RouteComponentFigures[]
+  // RouteComponentAction  RouteComponentAction[]
+  // RouteComponentNote    RouteComponentNote[]
+
+  @@map("component")
 }

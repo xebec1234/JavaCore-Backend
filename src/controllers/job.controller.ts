@@ -1,0 +1,95 @@
+import prisma from "../prisma/prisma"
+import { Request, Response } from "express";
+
+export const createJob = async (req: Request, res: Response) => {
+    try {
+        
+        const {
+            client,
+            area,
+            dateSurveyed,
+            jobNo,
+            poNo,
+            woNo,
+            reportNo,
+            jobDescription,
+            method,
+            inspector,
+            inspectionRoute,
+            equipmentUse,
+            dateRegistered,
+            yearWeekNo,
+        } = req.body;
+
+        await prisma.job.create({
+            data: {
+                userId: client,
+                area,
+                dateSurveyed,
+                jobNumber: jobNo,
+                poNumber: poNo,
+                woNumber: woNo,
+                reportNumber: reportNo,
+                jobDescription,
+                method,
+                inspector,
+                inspectionRoute,
+                equipmentUse,
+                dateRegistered,
+                yearWeekNumber: yearWeekNo,
+            },
+        })
+
+        res.status(200).json({ message: "Job Created Successfully", success: true })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error", success: false });
+    }
+}
+
+export const getJobs = async (req: Request, res: Response) => {
+    try {
+        const jobs = await prisma.job.findMany() 
+
+        res.status(200).json({jobs, message: "Jobs Fetched Successfully", success: true })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error", success: false });
+    }
+}
+
+export const getJobById = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const job = await prisma.job.findUnique({
+            where: {
+                id
+            }
+        })
+
+        res.status(200).json({job, message: "Job Fetched Successfully", success: true })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error", success: false });
+    }
+}
+
+export const deleteJobs = async (req: Request, res: Response) => {
+    try {
+        const { id: ids } = req.body
+
+        await prisma.job.deleteMany({
+            where: {
+                id: {
+                    in: ids,
+                }
+            },
+        })
+
+        res.status(500).json({ message: "Jobs Deleted Successfully", success: false });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error", success: false });
+    }
+}

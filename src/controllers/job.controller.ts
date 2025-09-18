@@ -49,7 +49,18 @@ export const createJob = async (req: Request, res: Response) => {
 
 export const getJobs = async (req: Request, res: Response) => {
     try {
-        const jobs = await prisma.job.findMany() 
+        const jobs = await prisma.job.findMany({
+            orderBy: {
+                no: "asc",
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                    },
+                },
+            },
+        }) 
 
         res.status(200).json({jobs, message: "Jobs Fetched Successfully", success: true })
     } catch (error) {
@@ -75,9 +86,34 @@ export const getJobById = async (req: Request, res: Response) => {
     }
 }
 
+export const updateJob = async (req: Request, res: Response) => {
+    try {
+        const { status, analyst, reviewer, id } = req.body;
+
+        const dateFinished = status === "Report Submitted" ? new Date() : undefined;
+
+        await prisma.job.update({
+            where: {
+                id
+            },
+            data: {
+                status,
+                analyst,
+                reviewer,
+                dateFinished
+            }
+        })
+
+        res.status(200).json({ message: "Job Updated Successfully", success: true })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error", success: false });
+    }
+}
+
 export const deleteJobs = async (req: Request, res: Response) => {
     try {
-        const { id: ids } = req.body
+        const { id: ids } = req.body;
 
         await prisma.job.deleteMany({
             where: {
@@ -87,7 +123,7 @@ export const deleteJobs = async (req: Request, res: Response) => {
             },
         })
 
-        res.status(500).json({ message: "Jobs Deleted Successfully", success: false });
+        res.status(200).json({ message: "Jobs Deleted Successfully", success: true });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error", success: false });

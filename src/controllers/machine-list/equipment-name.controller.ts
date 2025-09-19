@@ -101,7 +101,7 @@ export const updateEquipmentName = async (req: Request, res: Response) => {
   }
 };
 
-// DELETE Equipment Names 
+// DELETE Equipment Names (soft delete Only)
 export const deleteEquipmentNames = async (req: Request, res: Response) => {
   try {
     const { id: ids } = req.body; 
@@ -113,8 +113,9 @@ export const deleteEquipmentNames = async (req: Request, res: Response) => {
       });
     }
 
-    await prisma.equipmentName.deleteMany({
+    await prisma.equipmentName.updateMany({
       where: { id: { in: ids } },
+      data: { isDelete: true },
     });
 
     res.status(200).json({

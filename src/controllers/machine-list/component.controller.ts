@@ -101,7 +101,7 @@ export const updateComponent = async (req: Request, res: Response) => {
   }
 };
 
-// DELETE Components
+// DELETE Components (soft delete Only)
 export const deleteComponents = async (req: Request, res: Response) => {
   try {
     const { id: ids } = req.body;
@@ -113,8 +113,9 @@ export const deleteComponents = async (req: Request, res: Response) => {
       });
     }
 
-    await prisma.component.deleteMany({
+    await prisma.component.updateMany({
       where: { id: { in: ids } },
+      data: { isDelete: true },
     });
 
     res.status(200).json({

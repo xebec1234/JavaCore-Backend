@@ -89,13 +89,14 @@ export const updateArea = async (req: Request, res: Response) => {
   }
 };
 
-// DELETE Areas (soft delete or permanent)
+// DELETE Areas (soft delete Only)
 export const deleteAreas = async (req: Request, res: Response) => {
   try {
     const { id: ids } = req.body;
 
-    await prisma.area.deleteMany({
+    await prisma.area.updateMany({
       where: { id: { in: ids } },
+      data: { isDelete: true },
     });
 
     res

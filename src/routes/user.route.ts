@@ -1,10 +1,11 @@
 import { Router } from "express";
 import verifyToken from "../middleware/authMiddleware";
 import authorizeRoles from "../middleware/roleMiddleware";
-import { getClients, register } from "../controllers/user.controller";
+import { getClients, getMe, register } from "../controllers/user.controller";
 
 const router = Router();
 
+router.get("/me", verifyToken, authorizeRoles("user","admin"), getMe)
 router.get("/get", verifyToken, authorizeRoles("admin"), getClients)
 router.post("/register", verifyToken, authorizeRoles("admin"), register)
 

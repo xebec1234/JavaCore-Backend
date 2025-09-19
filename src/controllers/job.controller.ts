@@ -7,7 +7,7 @@ export const createJob = async (req: Request, res: Response) => {
         const {
             client,
             area,
-            dateSurveyed,
+            dateSurveyed,  
             jobNo,
             poNo,
             woNo,

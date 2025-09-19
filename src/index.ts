@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser"
 import authRoute from "./routes/auth.route"
 import userRoute from "./routes/user.route"
 import jobRoute from "./routes/job.route"
-import areaRoute from "routes/machine-list/area.route"
+import areaRoute from "./routes/machine-list/area.route"
 
 const app = express()
 const port = process.env.PORT || 8080
@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/job", jobRoute)
 app.use("/api/user", userRoute);
-app.use("/api/machien-list/area", areaRoute);
+app.use("/api/machine-list/area", areaRoute);
 
 app.get('/sample', (req, res) => {
     res.json({ message: "test"}).status(200)

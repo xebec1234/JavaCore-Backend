@@ -1,4 +1,4 @@
-import prisma from "../prisma/prisma"
+import prisma from "../prisma/prisma";
 import { Request, Response } from "express";
 import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken"
@@ -14,20 +14,25 @@ interface EmailValidationResponse {
 }
 
 export const getClients = async (req: Request, res: Response) => {
-    try {
-        const users = await prisma.user.findMany();
+  try {
+    const users = await prisma.user.findMany({
+      where: { role: "user" },
+      select: { id: true, name: true },
+    });
 
-        res.status(200).json({ users, message: "User Fetched Successfully", success: true})
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Internal Server Error", success: false });
-    }
-}
+    res
+      .status(200)
+      .json({ users, message: "User Fetched Successfully", success: true });
+    console.log("Users:", users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
 
 export const register = async (req: Request, res: Response) => {
-    try {
-        const { name, email, password, confirmPassword } = req.body
-
+  try {
+    const { name, email, password, confirmPassword } = req.body;
         if(password !== confirmPassword) {
             return res.status(400).json({ error: "Passwords do not match", success: false})
         }
@@ -73,79 +78,103 @@ export const getMe = async (req: Request, res: Response) => {
     const token = req.cookies.token;
 
     if (!token) {
-        return res.status(400).json({ error: "Token Expired", success: false });
+      return res.status(400).json({ error: "Token Expired", success: false });
     }
 
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
     if (typeof decoded === "string") {
-      return res.status(400).json({ error: "Invalid Token Payload", success: false });
+      return res
+        .status(400)
+        .json({ error: "Invalid Token Payload", success: false });
     }
 
     const user = await prisma.user.findUnique({
       where: {
-        id: decoded.id
-      }
-    })
+        id: decoded.id,
+      },
+    });
+    const {
+      id: _id,
+      emailVerified: _emailVerified,
+      password: _password,
+      image: _image,
+      ...safeUser
+    } = user;
 
-    const { id: _id, password: _password, image: _image,...safeUser } = user
-    
-    res.status(200).json({ user: safeUser, message: "User Get Successfully", success: true})
+    res
+      .status(200)
+      .json({
+        user: safeUser,
+        message: "User Get Successfully",
+        success: true,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error", success: false });
   }
-}
+};
 
 export const changePassword = async (req: Request, res: Response) => {
   try {
     const token = req.cookies.token;
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
-    if(newPassword !== confirmPassword) {
-      return res.status(400).json({ error: "Passwords do not match", success: false });
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(400)
+        .json({ error: "Passwords do not match", success: false });
     }
 
     if (!token) {
-        return res.status(400).json({ error: "Token Expired", success: false });
+      return res.status(400).json({ error: "Token Expired", success: false });
     }
 
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
     if (typeof decoded === "string") {
-      return res.status(400).json({ error: "Invalid Token Payload", success: false });
+      return res
+        .status(400)
+        .json({ error: "Invalid Token Payload", success: false });
     }
 
     const user = await prisma.user.findUnique({
       where: {
-        id: decoded.id
-      }
-    })
+        id: decoded.id,
+      },
+    });
 
-    if(!user) {
+    if (!user) {
       return res.status(400).json({ error: "User not found", success: false });
     }
 
-    const isPasswordValid = await bcryptjs.compare(currentPassword, user.password);
+    const isPasswordValid = await bcryptjs.compare(
+      currentPassword,
+      user.password
+    );
 
-    if(!isPasswordValid) {
-      return res.status(400).json({ error: "Current password is incorrect", success: false });
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ error: "Current password is incorrect", success: false });
     }
 
     const hashedNewPassword = await bcryptjs.hash(newPassword, 10);
 
     await prisma.user.update({
       where: {
-        id: user.id
+        id: user.id,
       },
       data: {
-        password: hashedNewPassword
-      }
-    })
+        password: hashedNewPassword,
+      },
+    });
 
-    res.status(200).json({ message: "Password Changed Successfully", success: true });
+    res
+      .status(200)
+      .json({ message: "Password Changed Successfully", success: true });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error", success: false });
   }
-}
+};

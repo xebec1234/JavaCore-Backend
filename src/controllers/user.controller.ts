@@ -2,6 +2,16 @@ import prisma from "../prisma/prisma"
 import { Request, Response } from "express";
 import bcryptjs from "bcryptjs"
 import jwt from "jsonwebtoken"
+import axios from "axios";
+
+interface EmailValidationResponse {
+  email_deliverability: {
+    status: string;
+    status_detail: string
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
 
 export const getClients = async (req: Request, res: Response) => {
     try {
@@ -34,6 +44,12 @@ export const register = async (req: Request, res: Response) => {
         if(existingEmail || existingUsername) {
             return res.status(400).json({ error: "Email or name already exist", success: false})
         }
+
+        // const { data } = await axios.get<EmailValidationResponse>(`https://emailreputation.abstractapi.com/v1/?api_key=${process.env.ABSTRACT_API_KEY}&email=${email}`)
+        
+        // if(data.email_deliverability.status !== "deliverable" || data.email_deliverability.status_detail !== "valid_email") {
+        //   return res.status(400).json({ error: "Email is not valid", success: false})
+        // }
 
         const hashedPassword = await bcryptjs.hash(password, 10);
 
@@ -72,7 +88,7 @@ export const getMe = async (req: Request, res: Response) => {
       }
     })
 
-    const { id: _id, emailVerified: _emailVerified, password: _password, image: _image,...safeUser } = user
+    const { id: _id, password: _password, image: _image,...safeUser } = user
     
     res.status(200).json({ user: safeUser, message: "User Get Successfully", success: true})
   } catch (error) {

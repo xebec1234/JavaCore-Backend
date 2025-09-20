@@ -73,47 +73,32 @@ export const register = async (req: Request, res: Response) => {
     }
 }
 
-export const getMe = async (req: Request, res: Response) => {
-  try {
-    const token = req.cookies.token;
+export const getCurrentUser = async (req: Request, res: Response) => {
+    try {
+        const token = req.cookies.token;
+        
+        if (!token) {
+            return res.status(401).json({ error: "No token provided", status: 400, success: false });
+        }
 
-    if (!token) {
-      return res.status(400).json({ error: "Token Expired", success: false });
+        const decoded = jwt.verify(token, process.env.SECRET_KEY) as { id: string };
+
+        const user = await prisma.user.findUnique({
+            where: { id: decoded.id },
+        });
+
+        if (!user) {
+            return res.status(401).json({ error: "User not found", success: false });
+        }
+
+        const { id: _id, emailVerified: _emailVerified, password: _password, image: _image,...safeUser } = user;
+
+        res.json({ user: safeUser, message: "User Get Successfully", success: true });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal Server Error", success: false });
     }
-
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-
-    if (typeof decoded === "string") {
-      return res
-        .status(400)
-        .json({ error: "Invalid Token Payload", success: false });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: decoded.id,
-      },
-    });
-    const {
-      id: _id,
-      emailVerified: _emailVerified,
-      password: _password,
-      image: _image,
-      ...safeUser
-    } = user;
-
-    res
-      .status(200)
-      .json({
-        user: safeUser,
-        message: "User Get Successfully",
-        success: true,
-      });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error", success: false });
-  }
-};
+}
 
 export const changePassword = async (req: Request, res: Response) => {
   try {

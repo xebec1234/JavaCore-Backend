@@ -55,24 +55,3 @@ export const logout = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error", success: false });
     }
 }
-
-export const getSession = (req: Request, res: Response) => {
-  try {
-    const token = req.cookies?.token;
-    const SECRET_KEY = process.env.SECRET_KEY;
-
-    if (!token) return res.json(null); 
-
-    const decoded = jwt.verify(token, SECRET_KEY) as { id: string; role: string };
-    
-    res.status(200).json({
-      user: {
-        id: decoded.id,
-        role: decoded.role,
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    res.json(null);
-  }
-};

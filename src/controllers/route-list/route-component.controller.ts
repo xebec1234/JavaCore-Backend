@@ -3,7 +3,7 @@ import prisma from "../../prisma/prisma";
 
 export const getRouteComponents = async (req: Request, res: Response) => {
   try {
-    const routeEquipmentId = req.query;
+    const {routeEquipmentId} = req.query;
 
     if (!routeEquipmentId || typeof routeEquipmentId !== "string") {
       return res
@@ -13,7 +13,7 @@ export const getRouteComponents = async (req: Request, res: Response) => {
 
     const routeComponents = await prisma.routeComponent.findMany({
       where: {
-        routeEquipmentId: { in: routeEquipmentId },
+        routeEquipmentId: routeEquipmentId,
       },
       select: {
         id: true,

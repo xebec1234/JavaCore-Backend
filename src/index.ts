@@ -19,6 +19,7 @@ import verifyRoute from "./routes/verify.route";
 import jobNumberRoute from "./routes/job-number.route";
 import getRouteEquipmentList from "./routes/route-list/route-equipment-list.route";
 import getRouteComponents from "./routes/route-list/route-component.route";
+import getRouteComponentComments from "./routes/route-list/route-component-comment.routes";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -49,6 +50,7 @@ app.use("/api/route-list/route-list", createRoute);
 app.use("/api/job-number", jobNumberRoute);
 app.use("/api/route-list/route-equipment-list", getRouteEquipmentList);
 app.use("/api/route-list/route-component", getRouteComponents);
+app.use("/api/route-list/route-component-comment", getRouteComponentComments);
 
 app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);

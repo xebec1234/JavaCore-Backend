@@ -14,6 +14,7 @@ import machineListCountRoute from "./routes/machine-list/machine-list-count.rout
 import equipmentGroupRoute from "./routes/machine-list/equipment-group.route";
 import equipmentNameRoute from "./routes/machine-list/equipment-name.route";
 import componentRoute from "./routes/machine-list/component.route";
+import createRoute from "./routes/route-list/route-list.route";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -39,6 +40,7 @@ app.use("/api/machine-list/machine-list-count", machineListCountRoute);
 app.use("/api/machine-list/equipment-group", equipmentGroupRoute);
 app.use("/api/machine-list/equipment-name", equipmentNameRoute);
 app.use("/api/machine-list/component", componentRoute);
+app.use("/api/route-list/route-list", createRoute);
 
 app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);

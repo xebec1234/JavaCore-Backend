@@ -16,6 +16,9 @@ import equipmentNameRoute from "./routes/machine-list/equipment-name.route";
 import componentRoute from "./routes/machine-list/component.route";
 import createRoute from "./routes/route-list/route-list.route";
 import verifyRoute from "./routes/verify.route";
+import jobNumberRoute from "./routes/job-number.route";
+import getRouteEquipmentList from "./routes/route-list/route-equipment-list.route";
+import getRouteComponents from "./routes/route-list/route-component.route";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -43,6 +46,9 @@ app.use("/api/machine-list/equipment-group", equipmentGroupRoute);
 app.use("/api/machine-list/equipment-name", equipmentNameRoute);
 app.use("/api/machine-list/component", componentRoute);
 app.use("/api/route-list/route-list", createRoute);
+app.use("/api/job-number", jobNumberRoute);
+app.use("/api/route-list/route-equipment-list", getRouteEquipmentList);
+app.use("/api/route-list/route-component", getRouteComponents);
 
 app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);

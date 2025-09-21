@@ -64,7 +64,7 @@ export const createRoute = async (req: Request, res: Response) => {
   }
 };
 
-// GET Routes
+// GET Routes for Creating Job
 export const getRoutes = async (req: Request, res: Response) => {
   try {
     const { clientId } = req.query;

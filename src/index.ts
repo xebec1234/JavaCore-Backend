@@ -14,6 +14,7 @@ import machineListCountRoute from "./routes/machine-list/machine-list-count.rout
 import equipmentGroupRoute from "./routes/machine-list/equipment-group.route";
 import equipmentNameRoute from "./routes/machine-list/equipment-name.route";
 import componentRoute from "./routes/machine-list/component.route";
+import verifyRoute from "./routes/verify.route";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -33,6 +34,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/job", jobRoute);
 app.use("/api/user", userRoute);
+app.use("/api/verify", verifyRoute);
 
 app.use("/api/machine-list/area", areaRoute);
 app.use("/api/machine-list/machine-list-count", machineListCountRoute);

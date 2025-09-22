@@ -98,7 +98,7 @@ export const login = async (req: Request, res: Response) => {
 export const refreshToken = async (req: Request, res: Response) => {
     try {
         const { refreshToken } = req.cookies;
-        const { userAgent } = req.body;
+        const userAgent = req.body;
 
         if (!refreshToken) {
             return res.status(401).json({ error: "No refresh token provided", success: false });
@@ -116,7 +116,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 
         const isDeviceVerified = await prisma.verifiedDevice.findFirst({
             where: { userId: user.id, userAgent}
-        })
+        })       
 
         const newToken = jwt.sign({
             id: user.id, 

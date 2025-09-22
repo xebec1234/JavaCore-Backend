@@ -23,10 +23,10 @@ export const login = async (req: Request, res: Response) => {
             return res.status(401).json({ error: "Invalid email or password" });
         }   
 
-        const token = jwt.sign({id: user.id, email: user.email, role: user.role}, SECRET_KEY, { expiresIn: "1h"})
+        const token = jwt.sign({id: user.id, email: user.email, role: user.role, emailVerified: user.emailVerified}, SECRET_KEY, { expiresIn: "1h"})
         const refreshToken = jwt.sign({id: user.id}, process.env.REFRESH_SECRET_KEY, { expiresIn: "7d"});
 
-        const { id: _id, emailVerified: _emailVerified, password: _password, image: _image,...safeUser } = user;
+        const { id: _id, password: _password, image: _image,...safeUser } = user;
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -67,7 +67,7 @@ export const refreshToken = async (req: Request, res: Response) => {
             return res.status(401).json({ error: "User not found", success: false });
         }
 
-        const newToken = jwt.sign({id: user.id, role: user.role}, process.env.SECRET_KEY, { expiresIn: "1h"});
+        const newToken = jwt.sign({id: user.id, email: user.email, role: user.role, emailVerified: user.emailVerified}, process.env.SECRET_KEY, { expiresIn: "1h"});
 
         res.cookie("token", newToken, {
             httpOnly: true,
@@ -76,7 +76,7 @@ export const refreshToken = async (req: Request, res: Response) => {
             maxAge: 60 * 60 * 1000,
         });
         
-        const { id: _id, emailVerified: _emailVerified, password: _password, image: _image,...safeUser } = user;
+        const { id: _id, password: _password, image: _image,...safeUser } = user;
 
         res.status(200).json({ user: safeUser, message: "User Get Successfully", success: true });
     } catch (error) {

@@ -16,12 +16,12 @@ model User {
   role          String    @default("user")
   emailVerified DateTime? @map("email_verified")
   image         String?
-  // otp           String?
-  // otpExpires    DateTime?
-  // otpCooldown   DateTime?
+  otp           String?
+  otpExpires    DateTime?
+  otpCooldown   DateTime?
 
+  verifiedDevices       VerifiedDevice[]
   jobs                  Job[]
-  // verifiedDevices       VerifiedDevice[]
   RouteComponentDetails RouteComponentDetails[]
   RouteList             RouteList[]
   RouteComponentImage   RouteComponentImage[]
@@ -30,6 +30,15 @@ model User {
   RouteComponentNote    RouteComponentNote[]
 
   @@map("users")
+}
+
+model VerifiedDevice {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  userAgent String
+  addedAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Job {

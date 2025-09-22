@@ -76,12 +76,13 @@ export const register = async (req: Request, res: Response) => {
 export const getCurrentUser = async (req: Request, res: Response) => {
     try {
         const token = req.cookies.token;
+        const userAgent = req.query.ua as string;  
         
         if (!token) {
             return res.status(401).json({ error: "No token provided", status: 400, success: false });
         }
 
-        const decoded = jwt.verify(token, process.env.SECRET_KEY) as { id: string };
+        const decoded = jwt.verify(token, process.env.SECRET_KEY) as { id: string, deviceVerified?: boolean };     
 
         const user = await prisma.user.findUnique({
             where: { id: decoded.id },
@@ -91,9 +92,22 @@ export const getCurrentUser = async (req: Request, res: Response) => {
             return res.status(401).json({ error: "User not found", success: false });
         }
 
-        const { id: _id, password: _password, image: _image,...safeUser } = user;
+        const isDeviceVerified = await prisma.verifiedDevice.findFirst({
+          where: {
+            userId: decoded.id,
+            userAgent
+          }
+        })
+        
 
-        res.json({ user: safeUser, message: "User Get Successfully", success: true });
+        const { id: _id, password: _password, image: _image, otp: _otp, otpExpires: _otpExpires, otpCooldown: _otpCooldown,...safeUser } = user;
+
+        const updatedUser: typeof safeUser & { deviceVerified: boolean } = {
+            ...safeUser,
+            deviceVerified: isDeviceVerified !== null ? true : false,
+        };
+
+        res.status(200).json({ user: updatedUser, message: "User Get Successfully", success: true });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Internal Server Error", success: false });

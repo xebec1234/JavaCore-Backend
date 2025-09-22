@@ -1,6 +1,7 @@
 import { Router } from "express";
 import verifyToken from "../middleware/authMiddleware";
 import authorizeRoles from "../middleware/roleMiddleware";
+import verifyAccount from "../middleware/verifyMiddleware";
 import { 
     createJob, 
     deleteJobs, 
@@ -12,7 +13,7 @@ import {
 
 const router = Router();
 
-router.post("/create", verifyToken, authorizeRoles("admin"), createJob)
+router.post("/create", verifyToken, verifyAccount, authorizeRoles("admin"), createJob)
 router.get("/get", verifyToken, authorizeRoles("admin"), getJobs)
 router.get("/get/:id", verifyToken, authorizeRoles("admin"), getJobById);
 router.patch("/update", verifyToken, authorizeRoles("admin"), updateJob)

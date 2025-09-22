@@ -65,6 +65,7 @@ app.use("/api/route-list/component-analyst-note", componentAnalystNote);
 app.use("/api/route-list/component-temperature", componentTemperature);
 app.use("/api/route-list/component-oil-analysis", componentOilAnalysis);
 
+
 app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);
 });

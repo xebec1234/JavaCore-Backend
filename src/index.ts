@@ -17,10 +17,11 @@ import componentRoute from "./routes/machine-list/component.route";
 import createRoute from "./routes/route-list/route-list.route";
 import verifyRoute from "./routes/verify.route";
 import jobNumberRoute from "./routes/job-number.route";
-import getRouteEquipmentList from "./routes/route-list/route-equipment-list.route";
-import getRouteComponents from "./routes/route-list/route-component.route";
-import getRouteComponentComments from "./routes/route-list/route-component-comment.routes";
-import getRouteComponentRecommendations from "./routes/route-list/route-component-recommendation.route";
+import equipmentListRoute from "./routes/route-list/route-equipment-list.route";
+import conponentsRoute from "./routes/route-list/route-component.route";
+import componentCommentRoute from "./routes/route-list/route-component-comment.routes";
+import componentRecommendationRoute from "./routes/route-list/route-component-recommendation.route";
+import componentClientAction from "./routes/route-list/component-client-action.route"
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -49,10 +50,14 @@ app.use("/api/machine-list/equipment-name", equipmentNameRoute);
 app.use("/api/machine-list/component", componentRoute);
 app.use("/api/route-list/route-list", createRoute);
 app.use("/api/job-number", jobNumberRoute);
-app.use("/api/route-list/route-equipment-list", getRouteEquipmentList);
-app.use("/api/route-list/route-component", getRouteComponents);
-app.use("/api/route-list/route-component-comment", getRouteComponentComments);
-app.use("/api/route-list/route-component-recommendation", getRouteComponentRecommendations);
+app.use("/api/route-list/route-equipment-list", equipmentListRoute);
+app.use("/api/route-list/route-component", conponentsRoute);
+app.use("/api/route-list/route-component-comment", componentCommentRoute);
+app.use(
+  "/api/route-list/route-component-recommendation",
+  componentRecommendationRoute
+);
+app.use("/api/route-list/component-client-action", componentClientAction);
 
 app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);

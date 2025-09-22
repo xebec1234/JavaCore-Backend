@@ -22,6 +22,7 @@ import conponentsRoute from "./routes/route-list/route-component.route";
 import componentCommentRoute from "./routes/route-list/route-component-comment.routes";
 import componentRecommendationRoute from "./routes/route-list/route-component-recommendation.route";
 import componentClientAction from "./routes/route-list/component-client-action.route"
+import componentAnalystNote from "./routes/route-list/component-analyst-note.route"
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -58,6 +59,7 @@ app.use(
   componentRecommendationRoute
 );
 app.use("/api/route-list/component-client-action", componentClientAction);
+app.use("/api/route-list/component-analyst-note", componentAnalystNote);
 
 app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import verifyToken from "../../middleware/authMiddleware";
 import authorizeRoles from "../../middleware/roleMiddleware";
+import verifyAccount from "../../middleware/verifyMiddleware";
 
 import {
   getRouteComponentTemperatures,
@@ -13,12 +14,14 @@ router.post(
   "/create",
   verifyToken,
   authorizeRoles("admin"),
+  verifyAccount,
   createRouteComponentTemperature
 );
 router.get(
   "/get",
-  verifyToken, 
+  verifyToken,
   authorizeRoles("admin", "user"),
+  verifyAccount,
   getRouteComponentTemperatures
 );
 

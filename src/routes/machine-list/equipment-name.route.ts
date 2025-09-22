@@ -1,6 +1,8 @@
 import { Router } from "express";
 import verifyToken from "../../middleware/authMiddleware";
 import authorizeRoles from "../../middleware/roleMiddleware";
+import verifyAccount from "../../middleware/verifyMiddleware";
+
 import {
   createEquipmentName,
   getEquipmentNames,
@@ -14,24 +16,28 @@ router.post(
   "/create",
   verifyToken,
   authorizeRoles("admin"),
+  verifyAccount,
   createEquipmentName
 );
 router.get(
   "/get",
   verifyToken,
   authorizeRoles("user", "admin"),
+  verifyAccount,
   getEquipmentNames
 );
 router.patch(
   "/update",
   verifyToken,
   authorizeRoles("admin"),
+  verifyAccount,
   updateEquipmentName
 );
 router.delete(
   "/delete",
   verifyToken,
   authorizeRoles("admin"),
+  verifyAccount,
   deleteEquipmentNames
 );
 

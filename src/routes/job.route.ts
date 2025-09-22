@@ -23,35 +23,36 @@ router.post(
 router.get(
   "/get",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
   getJobs
 );
 router.get(
   "/get/:id",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
   getJobById
 );
 router.patch(
   "/update",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
   updateJob
 );
 router.delete(
   "/delete",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
   deleteJobs
 );
 
 router.get(
   "/user-job",
   verifyToken,
+  verifyAccount,
   authorizeRoles("user", "admin"),
   getUserJobs
 );

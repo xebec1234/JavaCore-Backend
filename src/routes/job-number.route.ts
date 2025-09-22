@@ -9,8 +9,8 @@ const router = Router();
 router.get(
   "/search",
   verifyToken,
+    verifyAccount,
   authorizeRoles("admin"),
-  verifyAccount,
   getJobsBySearch
 );
 

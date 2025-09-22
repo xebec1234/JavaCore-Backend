@@ -13,15 +13,15 @@ const router = Router();
 router.post(
   "/create",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
   createRoute
 );
 router.get(
   "/get",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
   getRoutes
 );
 

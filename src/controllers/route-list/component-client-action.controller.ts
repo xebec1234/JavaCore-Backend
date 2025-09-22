@@ -3,7 +3,7 @@ import prisma from "../../prisma/prisma";
 
 export const getComponentClientAction = async (req: Request, res: Response) => {
   try {
-    const { componentId, clientId } = req.body;
+    const { componentId, clientId } = req.query;
 
     if (!componentId || !clientId) {
       return res
@@ -13,8 +13,8 @@ export const getComponentClientAction = async (req: Request, res: Response) => {
 
     const clientAction = await prisma.routeComponentAction.findMany({
       where: {
-        componentId: componentId,
-        clientId: clientId,
+        componentId: String(componentId),
+        clientId: String(clientId),
       },
       orderBy: {
         createdAt: "desc",

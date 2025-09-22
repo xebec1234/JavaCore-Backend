@@ -13,15 +13,15 @@ const router = Router();
 router.get(
   "/get",
   verifyToken,
-  authorizeRoles("admin", "user"),
   verifyAccount,
+  authorizeRoles("admin", "user"),
   getRouteComponentComments
 );
 router.post(
   "/create",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
   createRouteComponentComment
 );
 

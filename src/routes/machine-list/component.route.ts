@@ -15,27 +15,31 @@ const router = Router();
 router.post(
   "/create",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
+
   createComponent
 );
 router.get(
   "/get",
   verifyToken,
-  authorizeRoles("user", "admin"),
   verifyAccount,
+  authorizeRoles("user", "admin"),
+
   getComponents
 );
 router.patch(
   "/update",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
+
   updateComponent
 );
 router.delete(
   "/delete",
   verifyToken,
+  verifyAccount,
   authorizeRoles("admin"),
   deleteComponents
 );

@@ -9,8 +9,8 @@ const router = Router();
 router.get(
   "/counts",
   verifyToken,
-  authorizeRoles("user", "admin"),
   verifyAccount,
+  authorizeRoles("user", "admin"),
   getCounts
 );
 

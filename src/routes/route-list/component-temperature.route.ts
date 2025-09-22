@@ -13,15 +13,15 @@ const router = Router();
 router.post(
   "/create",
   verifyToken,
-  authorizeRoles("admin"),
   verifyAccount,
+  authorizeRoles("admin"),
   createRouteComponentTemperature
 );
 router.get(
   "/get",
   verifyToken,
-  authorizeRoles("admin", "user"),
   verifyAccount,
+  authorizeRoles("admin", "user"),
   getRouteComponentTemperatures
 );
 

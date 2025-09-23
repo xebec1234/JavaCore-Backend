@@ -4,6 +4,9 @@ prisma/generated/
 # env files (can opt-in for committing if needed)
 .env
 
+dist/
+
+
 runtime
 client.d.ts
 client.js

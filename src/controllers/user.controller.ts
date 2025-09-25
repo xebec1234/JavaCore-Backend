@@ -50,11 +50,11 @@ export const register = async (req: Request, res: Response) => {
             return res.status(400).json({ error: "Email or name already exist", success: false})
         }
 
-        const { data } = await axios.get<EmailValidationResponse>(`https://emailreputation.abstractapi.com/v1/?api_key=${process.env.ABSTRACT_API_KEY}&email=${email}`)
+        // const { data } = await axios.get<EmailValidationResponse>(`https://emailreputation.abstractapi.com/v1/?api_key=${process.env.ABSTRACT_API_KEY}&email=${email}`)
         
-        if(data.email_deliverability.status !== "deliverable" || data.email_deliverability.status_detail !== "valid_email") {
-          return res.status(400).json({ error: "Email is not valid", success: false})
-        }
+        // if(data.email_deliverability.status !== "deliverable" || data.email_deliverability.status_detail !== "valid_email") {
+        //   return res.status(400).json({ error: "Email is not valid", success: false})
+        // }
 
         const hashedPassword = await bcryptjs.hash(password, 10);
 

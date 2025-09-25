@@ -21,10 +21,12 @@ import equipmentListRoute from "./routes/route-list/route-equipment-list.route";
 import conponentsRoute from "./routes/route-list/route-component.route";
 import componentCommentRoute from "./routes/route-list/route-component-comment.routes";
 import componentRecommendationRoute from "./routes/route-list/route-component-recommendation.route";
-import componentClientAction from "./routes/route-list/component-client-action.route"
-import componentAnalystNote from "./routes/route-list/component-analyst-note.route"
-import componentTemperature from "./routes/route-list/component-temperature.route"
-import componentOilAnalysis from "./routes/route-list/component-oil-analysis.route"
+import componentClientAction from "./routes/route-list/component-client-action.route";
+import componentAnalystNote from "./routes/route-list/component-analyst-note.route";
+import componentTemperature from "./routes/route-list/component-temperature.route";
+import componentOilAnalysis from "./routes/route-list/component-oil-analysis.route";
+import reportequipment from "./routes/report/route-equipment.route";
+import reportcomponent from "./routes/report/route-component.route";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -64,7 +66,8 @@ app.use("/api/route-list/component-client-action", componentClientAction);
 app.use("/api/route-list/component-analyst-note", componentAnalystNote);
 app.use("/api/route-list/component-temperature", componentTemperature);
 app.use("/api/route-list/component-oil-analysis", componentOilAnalysis);
-
+app.use("/api/report/route-equipment", reportequipment);
+app.use("/api/report/route-component", reportcomponent);
 
 app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);
@@ -76,4 +79,4 @@ app
   })
   .on("error", (err) => {
     console.error("Failed to start server:", err);
-  })
+  });

@@ -27,6 +27,7 @@ import componentTemperature from "./routes/route-list/component-temperature.rout
 import componentOilAnalysis from "./routes/route-list/component-oil-analysis.route";
 import reportequipment from "./routes/report/route-equipment.route";
 import reportcomponent from "./routes/report/route-component.route";
+import severity from "./routes/machine-list/severity.route"
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -48,6 +49,7 @@ app.use("/api/job", jobRoute);
 app.use("/api/user", userRoute);
 app.use("/api/verify", verifyRoute);
 
+app.use("/api/machine-list/severity", severity);
 app.use("/api/machine-list/area", areaRoute);
 app.use("/api/machine-list/machine-list-count", machineListCountRoute);
 app.use("/api/machine-list/equipment-group", equipmentGroupRoute);

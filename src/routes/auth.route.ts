@@ -12,7 +12,7 @@ import verifyAccount from "../middleware/verifyMiddleware";
 const router = Router();
 
 router.post("/login", login)
-router.post("/logout", verifyToken, verifyAccount, authorizeRoles("user","admin"), logout)
+router.post("/logout", verifyToken, authorizeRoles("user","admin"), logout)
 router.get("/me", verifyToken, authorizeRoles("user","admin"), getCurrentUser)
 router.post("/refresh-token", refreshToken)
 

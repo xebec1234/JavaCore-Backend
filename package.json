@@ -2,17 +2,18 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/lambda.js",
   "prisma": {
     "seed": "ts-node src/prisma/seed.ts"
   },
   "scripts": {
-    "dev": "nodemon src/index.ts",     
-    "build": "tsc",               
-    "start": "node dist/index.js"  , 
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "migrate": "prisma migrate dev",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "prisma db seed"
+    "seed": "prisma db seed",
+    "deploy": "serverless deploy"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   "dependencies": {
     "@prisma/client": "^6.16.2",
     "@prisma/extension-accelerate": "^2.0.2",
+    "@vendia/serverless-express": "^4.12.6",
     "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
     "compression": "^1.8.1",

@@ -256,21 +256,31 @@ model RouteComponentDetails {
 }
 
 model RouteComponentImage {
-  id          String    @id @default(cuid())
-  clientId    String
-  componentId String
-  image       String
-  client      User      @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  component   Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  id           String    @id @default(cuid())
+  clientId     String
+  componentId  String
+  fileName     String
+  originalName String
+  fileUrl      String
+  fileSize     Int
+  fileType     String
+  uploadedAt   DateTime  @default(now())
+  client       User      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  component    Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
 
   @@map("route_component_Details")
 }
 
 model RouteComponentFigures {
-  id          String    @id @default(cuid())
-  clientId    String
-  componentId String
-  figures     String
-  client      User      @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  component   Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  id           String    @id @default(cuid())
+  clientId     String
+  componentId  String
+  fileName     String
+  originalName String
+  fileUrl      String
+  fileSize     Int
+  fileType     String
+  uploadedAt   DateTime  @default(now())
+  client       User      @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  component    Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
 }

@@ -2,17 +2,18 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/lambda.js",
   "prisma": {
     "seed": "ts-node src/prisma/seed.ts"
   },
   "scripts": {
-    "dev": "nodemon src/index.ts",     
-    "build": "tsc",               
-    "start": "node dist/index.js"  , 
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
     "migrate": "prisma migrate dev",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "prisma db seed"
+    "seed": "prisma db seed",
+    "deploy": "serverless deploy"
   },
   "repository": {
     "type": "git",
@@ -27,8 +28,10 @@
   },
   "homepage": "https://github.com/xebec1234/JavaCore-Backend#readme",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.896.0",
     "@prisma/client": "^6.16.2",
     "@prisma/extension-accelerate": "^2.0.2",
+    "@vendia/serverless-express": "^4.12.6",
     "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
     "compression": "^1.8.1",
@@ -36,15 +39,19 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "express-fileupload": "^1.5.2",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
-    "nodemailer": "^7.0.6"
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.6",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
     "@types/node": "^24.4.0",
     "nodemon": "^3.1.10",
     "prisma": "^6.16.2",

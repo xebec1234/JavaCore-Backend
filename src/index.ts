@@ -27,6 +27,8 @@ import componentTemperature from "./routes/route-list/component-temperature.rout
 import componentOilAnalysis from "./routes/route-list/component-oil-analysis.route";
 import reportequipment from "./routes/report/route-equipment.route";
 import reportcomponent from "./routes/report/route-component.route";
+import getRecentRoutes from "./routes/route-list/recent-routes.route";
+import componentSeverities from "./routes/route-list/component-severities.route"
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -68,6 +70,8 @@ app.use("/api/route-list/component-temperature", componentTemperature);
 app.use("/api/route-list/component-oil-analysis", componentOilAnalysis);
 app.use("/api/report/route-equipment", reportequipment);
 app.use("/api/report/route-component", reportcomponent);
+app.use("/api/route-list/recent-routes", getRecentRoutes);
+app.use("/api/route-list/component-severities", componentSeverities);
 
 app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);

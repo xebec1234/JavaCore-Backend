@@ -6,7 +6,7 @@ import verifyAccount from "../../middleware/verifyMiddleware";
 import {
   getRouteComponentDetails,
   createRouteComponentDetails,
-} from "controllers/route-list/component-details.controller";
+} from "../../controllers/route-list/component-details.controller";
 
 const router = Router();
 

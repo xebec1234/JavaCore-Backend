@@ -25,6 +25,8 @@ import componentClientAction from "./routes/route-list/component-client-action.r
 import componentAnalystNote from "./routes/route-list/component-analyst-note.route";
 import componentTemperature from "./routes/route-list/component-temperature.route";
 import componentOilAnalysis from "./routes/route-list/component-oil-analysis.route";
+import componentEquipmentDrawing from "./routes/route-list/component-equipment-drawing.route"
+import componentReportFigure from "./routes/route-list/component-report-figure.route"
 import reportequipment from "./routes/report/route-equipment.route";
 import reportcomponent from "./routes/report/route-component.route";
 import severity from "./routes/machine-list/severity.route"
@@ -68,6 +70,8 @@ app.use("/api/route-list/component-client-action", componentClientAction);
 app.use("/api/route-list/component-analyst-note", componentAnalystNote);
 app.use("/api/route-list/component-temperature", componentTemperature);
 app.use("/api/route-list/component-oil-analysis", componentOilAnalysis);
+app.use("/api/route-list/component-equipment-drawing", componentEquipmentDrawing)
+app.use("/api/route-list/component-report-figure", componentReportFigure)
 app.use("/api/report/route-equipment", reportequipment);
 app.use("/api/report/route-component", reportcomponent);
 

@@ -81,4 +81,4 @@ app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);
 });
 
-export default app;
+export default app

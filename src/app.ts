@@ -30,6 +30,7 @@ import componentReportFigure from "./routes/route-list/component-report-figure.r
 import reportequipment from "./routes/report/route-equipment.route";
 import reportcomponent from "./routes/report/route-component.route";
 import severity from "./routes/machine-list/severity.route"
+import reportIntroduction from "./routes/report/report-introduction.route";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -74,9 +75,10 @@ app.use("/api/route-list/component-equipment-drawing", componentEquipmentDrawing
 app.use("/api/route-list/component-report-figure", componentReportFigure)
 app.use("/api/report/route-equipment", reportequipment);
 app.use("/api/report/route-component", reportcomponent);
+app.use("/api/report/report-introduction", reportIntroduction);
 
 app.get("/sample", (req, res) => {
   res.json({ message: "test" }).status(200);
 });
 
-export default app;
+export default app

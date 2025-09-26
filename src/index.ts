@@ -29,6 +29,7 @@ import reportequipment from "./routes/report/route-equipment.route";
 import reportcomponent from "./routes/report/route-component.route";
 import getRecentRoutes from "./routes/route-list/recent-routes.route";
 import componentSeverities from "./routes/route-list/component-severities.route"
+import severity from "./routes/machine-list/severity.route"
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -50,6 +51,7 @@ app.use("/api/job", jobRoute);
 app.use("/api/user", userRoute);
 app.use("/api/verify", verifyRoute);
 
+app.use("/api/machine-list/severity", severity);
 app.use("/api/machine-list/area", areaRoute);
 app.use("/api/machine-list/machine-list-count", machineListCountRoute);
 app.use("/api/machine-list/equipment-group", equipmentGroupRoute);

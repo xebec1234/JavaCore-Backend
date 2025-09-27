@@ -103,7 +103,7 @@ export const deleteReportFigure = async (req: Request, res: Response) => {
         .json({ message: "Missing drawing id", success: false });
     }
 
-    const report = await prisma.routeComponentImage.findUnique({
+    const report = await prisma.routeComponentFigures.findUnique({
       where: { id },
     });
 

@@ -3,6 +3,6 @@ import app from "./app";
 if (process.env.NODE_ENV !== "lambda") {
   const port = process.env.PORT || 8080;
   app.listen(port, () => {
-    console.log(`Server running on port: ${port}`);
+    console.log(`Server running on port: ${port}`)
   });
 }

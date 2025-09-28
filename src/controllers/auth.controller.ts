@@ -24,7 +24,7 @@ export const login = async (req: Request, res: Response) => {
             where: { userId: user.id, userAgent: device },
         })
 
-        if (!isDeviceVerified) {
+        if (!isDeviceVerified || user.emailVerified) {
             await prisma.user.update({
                 where: { id: user.id },
                 data: {

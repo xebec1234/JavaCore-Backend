@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.route";
 import userRoute from "./routes/user.route";
 import jobRoute from "./routes/job.route";
+import jobInspector from "./routes/job/job-inspector.route"
 
 import areaRoute from "./routes/machine-list/area.route";
 import machineListCountRoute from "./routes/machine-list/machine-list-count.route";
@@ -50,6 +51,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoute);
 app.use("/api/job", jobRoute);
+app.use("/api/job/job-inspector", jobInspector);
 app.use("/api/user", userRoute);
 app.use("/api/verify", verifyRoute);
 

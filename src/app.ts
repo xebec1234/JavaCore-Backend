@@ -17,6 +17,7 @@ import componentRoute from "./routes/machine-list/component.route";
 import createRoute from "./routes/route-list/route-list.route";
 import verifyRoute from "./routes/verify.route";
 import jobNumberRoute from "./routes/job-number.route";
+import recentRoutes from "./routes/route-list/recent-routes.route"
 import equipmentListRoute from "./routes/route-list/route-equipment-list.route";
 import conponentsRoute from "./routes/route-list/route-component.route";
 import componentCommentRoute from "./routes/route-list/route-component-comment.routes";
@@ -60,6 +61,7 @@ app.use("/api/machine-list/equipment-name", equipmentNameRoute);
 app.use("/api/machine-list/component", componentRoute);
 app.use("/api/route-list/route-list", createRoute);
 app.use("/api/job-number", jobNumberRoute);
+app.use("/api/route-list/recent-routes", recentRoutes);
 app.use("/api/route-list/route-equipment-list", equipmentListRoute);
 app.use("/api/route-list/route-component", conponentsRoute);
 app.use("/api/route-list/route-component-comment", componentCommentRoute);

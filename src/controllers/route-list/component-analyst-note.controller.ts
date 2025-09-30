@@ -3,9 +3,9 @@ import prisma from "../../prisma/prisma";
 
 export const getComponentAnalystNote = async (req: Request, res: Response) => {
   try {
-    const { componentId, clientId } = req.query;
+    const { routeComponentId, clientId } = req.query;
 
-    if (!componentId || !clientId) {
+    if (!routeComponentId || !clientId) {
       return res
         .status(400)
         .json({ message: "Missing ConponentId and ClientId", success: false });
@@ -13,7 +13,7 @@ export const getComponentAnalystNote = async (req: Request, res: Response) => {
 
     const routeComponentNote = await prisma.routeComponentNote.findMany({
       where: {
-        componentId: String(componentId),
+        routeComponentId: String(routeComponentId),
         clientId: String(clientId),
       },
       orderBy: {

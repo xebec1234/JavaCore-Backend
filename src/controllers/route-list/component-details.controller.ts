@@ -48,7 +48,7 @@ export const createRouteComponentDetails = async (
     const newDetails = await prisma.routeComponentDetails.create({
       data: {
         clientId: (decoded as any).id,
-        componentId: routeComponent.componentId,
+        routeComponentId: routeComponent.componentId,
         header,
         value,
       },

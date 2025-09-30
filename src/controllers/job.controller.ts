@@ -32,7 +32,7 @@ export const createJob = async (req: Request, res: Response) => {
         reportNumber: reportNo,
         jobDescription,
         method,
-        inspector,
+        inspectorId: inspector,
         inspectionRoute,
         equipmentUse,
         dateRegistered,

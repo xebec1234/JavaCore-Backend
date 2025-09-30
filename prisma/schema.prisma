@@ -41,33 +41,41 @@ model VerifiedDevice {
 }
 
 model Job {
-  id                 String    @id @default(uuid())
-  no                 Int       @unique @default(autoincrement())
-  status             String    @default("Waiting for Analysis")
-  userId             String    @map("user_id")
+  id                 String     @id @default(uuid())
+  no                 Int        @unique @default(autoincrement())
+  status             String     @default("Waiting for Analysis")
+  userId             String     @map("user_id")
   area               String
   dateSurveyed       DateTime
-  jobNumber          String    @unique
+  jobNumber          String     @unique
   poNumber           String?
   woNumber           String?
   reportNumber       String?
   jobDescription     String
   method             String
-  inspector          String
+  inspectorId        String? //need baguhin before actual deployment (removed "?") 
   analyst            String?
   reviewer           String?
   dateFinished       DateTime?
   inspectionRoute    String
   equipmentUse       String
-  dateRegistered     DateTime  @default(now())
+  dateRegistered     DateTime   @default(now())
   yearWeekNumber     String
   reportIntroduction String?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  routeList          RouteList @relation(fields: [inspectionRoute], references: [id], onDelete: Cascade)
-  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  routeList          RouteList  @relation(fields: [inspectionRoute], references: [id], onDelete: Cascade)
+  user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inspector          Inspector? @relation(fields: [inspectorId], references: [id], onDelete: Cascade)
 
   @@map("jobs")
+}
+
+model Inspector {
+  id        String @id @default(cuid())
+  inspector String
+
+  Job Job[]
 }
 
 model Area {
@@ -105,17 +113,12 @@ model EquipmentName {
 }
 
 model Component {
-  id                    String                  @id @default(cuid())
-  name                  String
-  equipmentNameId       String?
-  isDelete              Boolean                 @default(false)
-  RouteComponentFigures RouteComponentFigures[]
-  equipmentName         EquipmentName?          @relation(fields: [equipmentNameId], references: [id], onDelete: Cascade)
-  routeComponent        RouteComponent[]
-  RouteComponentImage   RouteComponentImage[]
-  RouteComponentAction  RouteComponentAction[]
-  RouteComponentDetails RouteComponentDetails[]
-  RouteComponentNote    RouteComponentNote[]
+  id              String           @id @default(cuid())
+  name            String
+  equipmentNameId String?
+  isDelete        Boolean          @default(false)
+  equipmentName   EquipmentName?   @relation(fields: [equipmentNameId], references: [id], onDelete: Cascade)
+  routeComponent  RouteComponent[]
 
   @@map("component")
 }
@@ -159,18 +162,23 @@ model RouteEquipmentName {
 }
 
 model RouteComponent {
-  id               String                         @id @default(uuid())
-  routeMachineId   String
-  clientId         String
-  componentId      String
-  routeEquipmentId String
-  component        Component                      @relation(fields: [componentId], references: [id], onDelete: Cascade)
-  routeEquipment   RouteEquipmentName             @relation(fields: [routeEquipmentId], references: [id], onDelete: Cascade)
-  routeMachine     RouteMachineList               @relation(fields: [routeMachineId], references: [id], onDelete: Cascade)
-  comments         RouteComponentComment[]
-  oilAnalyses      RouteComponentOilAnalysis[]
-  recommendations  RouteComponentRecommendation[]
-  temperatures     RouteComponentTemperature[]
+  id                    String                         @id @default(uuid())
+  routeMachineId        String
+  clientId              String
+  componentId           String
+  routeEquipmentId      String
+  component             Component                      @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  routeEquipment        RouteEquipmentName             @relation(fields: [routeEquipmentId], references: [id], onDelete: Cascade)
+  routeMachine          RouteMachineList               @relation(fields: [routeMachineId], references: [id], onDelete: Cascade)
+  comments              RouteComponentComment[]
+  oilAnalyses           RouteComponentOilAnalysis[]
+  recommendations       RouteComponentRecommendation[]
+  temperatures          RouteComponentTemperature[]
+  RouteComponentImage   RouteComponentImage[]
+  RouteComponentAction  RouteComponentAction[]
+  RouteComponentDetails RouteComponentDetails[]
+  RouteComponentNote    RouteComponentNote[]
+  RouteComponentFigures RouteComponentFigures[]
 
   @@map("route_component")
 }
@@ -218,69 +226,69 @@ model RouteComponentOilAnalysis {
 }
 
 model RouteComponentAction {
-  id          String    @id @default(cuid())
-  clientId    String
-  componentId String
-  action      String
-  woNumber    String?
-  createdAt   DateTime  @default(now())
-  client      User      @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  component   Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  clientId         String
+  routeComponentId String
+  action           String
+  woNumber         String?
+  createdAt        DateTime       @default(now())
+  client           User           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  routeComponent   RouteComponent @relation(fields: [routeComponentId], references: [id], onDelete: Cascade)
 
   @@map("route_component_action")
 }
 
 model RouteComponentNote {
-  id          String    @id @default(cuid())
-  clientId    String
-  componentId String
-  note        String
-  analyst     String?
-  createdAt   DateTime  @default(now())
-  client      User      @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  component   Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  clientId         String
+  routeComponentId String
+  note             String
+  analyst          String?
+  createdAt        DateTime       @default(now())
+  client           User           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  routeComponent   RouteComponent @relation(fields: [routeComponentId], references: [id], onDelete: Cascade)
 
   @@map("route_component_note")
 }
 
 model RouteComponentDetails {
-  id          String    @id @default(cuid())
-  clientId    String
-  componentId String
-  header      String
-  value       String
-  client      User      @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  component   Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  id               String          @id @default(cuid())
+  clientId         String
+  routeComponentId String? //need baguhin before actual deployment (removed "?")
+  header           String
+  value            String
+  client           User            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  routeComponent   RouteComponent? @relation(fields: [routeComponentId], references: [id], onDelete: Cascade)
 
   @@map("route_component_details")
 }
 
 model RouteComponentImage {
-  id           String    @id @default(cuid())
-  clientId     String
-  componentId  String
-  fileName     String
-  originalName String
-  fileUrl      String
-  fileSize     Int
-  fileType     String
-  uploadedAt   DateTime  @default(now())
-  client       User      @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  component    Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  clientId         String
+  routeComponentId String
+  fileName         String
+  originalName     String
+  fileUrl          String
+  fileSize         Int
+  fileType         String
+  uploadedAt       DateTime       @default(now())
+  client           User           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  routeComponent   RouteComponent @relation(fields: [routeComponentId], references: [id], onDelete: Cascade)
 
   @@map("route_component_Details")
 }
 
 model RouteComponentFigures {
-  id           String    @id @default(cuid())
-  clientId     String
-  componentId  String
-  fileName     String
-  originalName String
-  fileUrl      String
-  fileSize     Int
-  fileType     String
-  uploadedAt   DateTime  @default(now())
-  client       User      @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  component    Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  clientId         String
+  routeComponentId String
+  fileName         String
+  originalName     String
+  fileUrl          String
+  fileSize         Int
+  fileType         String
+  uploadedAt       DateTime       @default(now())
+  client           User           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  routeomponent    RouteComponent @relation(fields: [routeComponentId], references: [id], onDelete: Cascade)
 }

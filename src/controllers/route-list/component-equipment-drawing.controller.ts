@@ -7,11 +7,11 @@ import { v4 as uuid } from "uuid";
 
 export const createEquipmentDrawing = async (req: Request, res: Response) => {
     try {
-        const { clientId, componentId } = req.body
+        const { clientId, routeComponentId } = req.body
 
         const folder = "equipment-drawing/"
 
-        if (!clientId || !componentId) {
+        if (!clientId || !routeComponentId) {
             return res.status(400).json({ error: "clientId and componentId are required", success: false });
         }
 
@@ -33,7 +33,7 @@ export const createEquipmentDrawing = async (req: Request, res: Response) => {
                 return prisma.routeComponentImage.create({
                 data: {
                     clientId,
-                    componentId,
+                    routeComponentId,
                     fileName: uploaded.key,
                     originalName: file.originalname,
                     fileUrl: uploaded.url,
@@ -54,9 +54,9 @@ export const createEquipmentDrawing = async (req: Request, res: Response) => {
 
 export const getEquipmentDrawing = async (req: Request, res: Response) => {
     try {
-        const { componentId, clientId } = req.query;
+        const { routeComponentId, clientId } = req.query;
 
-        if (!componentId || typeof componentId !== "string") {
+        if (!routeComponentId || typeof routeComponentId !== "string") {
             return res.status(400).json({
                 message: "Missing componentId",
                 success: false,
@@ -73,7 +73,7 @@ export const getEquipmentDrawing = async (req: Request, res: Response) => {
         const equipmentDrawings = await prisma.routeComponentImage.findMany({
             where: {
                 clientId,
-                componentId
+                routeComponentId
             },
             orderBy: {
                 uploadedAt: "desc"

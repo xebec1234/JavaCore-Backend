@@ -50,6 +50,7 @@ export const createRouteComponentDetails = async (
   }
 };
 
+// Get
 export const getRouteComponentDetails = async (req: Request, res: Response) => {
   try {
     const { routeComponentId } = req.query;
@@ -79,6 +80,69 @@ export const getRouteComponentDetails = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error fetching route component details:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+// Update
+export const updateRouteComponentDetails = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+    const { header, value } = req.body;
+
+    if (!header && !value) {
+      return res.status(400).json({
+        message: "Nothing to update",
+        success: false,
+      });
+    }
+
+    const updated = await prisma.routeComponentDetails.update({
+      where: { id },
+      data: {
+        ...(header && { header }),
+        ...(value && { value }),
+      },
+    });
+
+    return res.status(200).json({
+      message: "Details updated successfully",
+      data: updated,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error updating details:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+// Delete
+export const deleteRouteComponentDetails = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.routeComponentDetails.delete({
+      where: { id },
+    });
+
+    return res.status(200).json({
+      message: "Details deleted successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error deleting details:", error);
     return res.status(500).json({
       message: "Internal Server Error",
       success: false,

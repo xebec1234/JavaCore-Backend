@@ -70,6 +70,11 @@ export const getJobs = async (req: Request, res: Response) => {
             name: true,
           },
         },
+        inspector: {
+          select: {
+            inspector: true
+          }
+        }
       },
     });
 
@@ -183,6 +188,13 @@ export const getUserJobs = async (req: Request, res: Response) => {
       where: {
         userId: decoded.id,
       },
+      include: {
+        inspector: {
+          select: {
+            inspector: true
+          }
+        }
+      }
     });
 
     res

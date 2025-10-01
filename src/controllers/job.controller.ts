@@ -188,6 +188,13 @@ export const getUserJobs = async (req: Request, res: Response) => {
       where: {
         userId: decoded.id,
       },
+      include: {
+        inspector: {
+          select: {
+            inspector: true
+          }
+        }
+      }
     });
 
     res

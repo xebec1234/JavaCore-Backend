@@ -14,7 +14,7 @@ router.post(
   "/create",
   verifyToken,
   verifyAccount,
-  authorizeRoles("user"),
+  authorizeRoles("admin"),
   createRouteComponentDetails
 );
 router.get(

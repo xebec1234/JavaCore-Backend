@@ -53,7 +53,7 @@ model Job {
   reportNumber       String?
   jobDescription     String
   method             String
-  inspectorId        String? //need baguhin before actual deployment (removed "?") 
+  inspectorId        String?
   analyst            String?
   reviewer           String?
   dateFinished       DateTime?
@@ -65,8 +65,8 @@ model Job {
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
   routeList          RouteList  @relation(fields: [inspectionRoute], references: [id], onDelete: Cascade)
-  user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   inspector          Inspector? @relation(fields: [inspectorId], references: [id], onDelete: Cascade)
+  user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("jobs")
 }
@@ -74,8 +74,7 @@ model Job {
 model Inspector {
   id        String @id @default(cuid())
   inspector String
-
-  Job Job[]
+  Job       Job[]
 }
 
 model Area {
@@ -167,18 +166,18 @@ model RouteComponent {
   clientId              String
   componentId           String
   routeEquipmentId      String
+  RouteComponentFigures RouteComponentFigures[]
   component             Component                      @relation(fields: [componentId], references: [id], onDelete: Cascade)
   routeEquipment        RouteEquipmentName             @relation(fields: [routeEquipmentId], references: [id], onDelete: Cascade)
   routeMachine          RouteMachineList               @relation(fields: [routeMachineId], references: [id], onDelete: Cascade)
+  RouteComponentImage   RouteComponentImage[]
+  RouteComponentAction  RouteComponentAction[]
   comments              RouteComponentComment[]
+  RouteComponentDetails RouteComponentDetails[]
+  RouteComponentNote    RouteComponentNote[]
   oilAnalyses           RouteComponentOilAnalysis[]
   recommendations       RouteComponentRecommendation[]
   temperatures          RouteComponentTemperature[]
-  RouteComponentImage   RouteComponentImage[]
-  RouteComponentAction  RouteComponentAction[]
-  RouteComponentDetails RouteComponentDetails[]
-  RouteComponentNote    RouteComponentNote[]
-  RouteComponentFigures RouteComponentFigures[]
 
   @@map("route_component")
 }
@@ -254,7 +253,7 @@ model RouteComponentNote {
 model RouteComponentDetails {
   id               String          @id @default(cuid())
   clientId         String
-  routeComponentId String? //need baguhin before actual deployment (removed "?")
+  routeComponentId String?
   header           String
   value            String
   client           User            @relation(fields: [clientId], references: [id], onDelete: Cascade)

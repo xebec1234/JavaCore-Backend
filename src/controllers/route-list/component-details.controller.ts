@@ -1,54 +1,34 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
-import jwt from "jsonwebtoken";
 
 export const createRouteComponentDetails = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { componentId, header, value } = req.body;
+    const { routeComponentId, clientId, header, value } = req.body;
     console.log("req.body:", req.body);
-    if (!componentId || !header || !value) {
+    if (!clientId || !header || !value) {
       return res
         .status(400)
         .json({ message: "Missing required fields", success: false });
     }
 
     const routeComponent = await prisma.routeComponent.findUnique({
-      where: { id: componentId },
-      include: { component: true },
+      where: { id: routeComponentId },
     });
 
-    const componentExists = await prisma.component.findUnique({
-      where: { id: routeComponent.componentId },
-    });
-
-    if (!componentExists) {
+    if (!routeComponent) {
       return res.status(400).json({
-        message: "Invalid componentId: component does not exist",
+        message: "Invalid routeComponentId: route component does not exist",
         success: false,
       });
     }
 
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(400).json({ message: "Token Expired", success: false });
-    }
-
-    const decoded = jwt.verify(token, process.env.SECRET_KEY as string);
-
-    if (typeof decoded === "string" || !decoded || !("id" in decoded)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid Token Payload", success: false });
-    }
-
     const newDetails = await prisma.routeComponentDetails.create({
       data: {
-        clientId: (decoded as any).id,
-        routeComponentId: routeComponent.componentId,
+        clientId: clientId,
+        routeComponentId: routeComponentId,
         header,
         value,
       },
@@ -72,23 +52,18 @@ export const createRouteComponentDetails = async (
 
 export const getRouteComponentDetails = async (req: Request, res: Response) => {
   try {
-    const { componentId } = req.query;
+    const { routeComponentId } = req.query;
 
-    if (!componentId || typeof componentId !== "string") {
+    if (!routeComponentId || typeof routeComponentId !== "string") {
       return res.status(400).json({
         message: "Missing componentId",
         success: false,
       });
     }
 
-    const routeComponent = await prisma.routeComponent.findUnique({
-      where: { id: componentId },
-      include: { component: true },
-    });
-
     const componentDetails = await prisma.routeComponentDetails.findMany({
       where: {
-        id: routeComponent.component.id,
+        routeComponentId: routeComponentId,
       },
       select: {
         id: true,

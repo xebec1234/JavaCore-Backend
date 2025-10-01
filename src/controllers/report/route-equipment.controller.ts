@@ -32,8 +32,6 @@ export const getRouteEquipment = async (req: Request, res: Response) => {
       },
     });
 
-    console.log("Api data: ", routeEquipment);
-
     return res.status(200).json({
       message: "Successfully fetched route equipment",
       data: routeEquipment,

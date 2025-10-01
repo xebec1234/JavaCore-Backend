@@ -29,6 +29,7 @@ import componentTemperature from "./routes/route-list/component-temperature.rout
 import componentOilAnalysis from "./routes/route-list/component-oil-analysis.route";
 import componentEquipmentDrawing from "./routes/route-list/component-equipment-drawing.route"
 import componentReportFigure from "./routes/route-list/component-report-figure.route"
+import componentDetails from "./routes/route-list/component-details.route"
 import reportequipment from "./routes/report/route-equipment.route";
 import reportcomponent from "./routes/report/route-component.route";
 import severity from "./routes/machine-list/severity.route"
@@ -77,6 +78,7 @@ app.use("/api/route-list/component-temperature", componentTemperature);
 app.use("/api/route-list/component-oil-analysis", componentOilAnalysis);
 app.use("/api/route-list/component-equipment-drawing", componentEquipmentDrawing)
 app.use("/api/route-list/component-report-figure", componentReportFigure)
+app.use("/api/route-list/component-details", componentDetails);
 app.use("/api/report/route-equipment", reportequipment);
 app.use("/api/report/route-component", reportcomponent);
 app.use("/api/report/report-introduction", reportIntroduction);

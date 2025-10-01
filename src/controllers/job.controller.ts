@@ -70,6 +70,11 @@ export const getJobs = async (req: Request, res: Response) => {
             name: true,
           },
         },
+        inspector: {
+          select: {
+            inspector: true
+          }
+        }
       },
     });
 

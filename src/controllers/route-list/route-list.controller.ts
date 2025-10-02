@@ -95,3 +95,62 @@ export const getRoutes = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getAllRoutes = async (req: Request, res: Response) => {
+  try {
+    const routes = await prisma.routeList.findMany({
+      include: {
+        user: {
+          select: {
+            email: true
+          }
+        }
+      }
+    })
+
+    res.status(200).json({ routes, message: "Route Get Successfully", success: true})
+  } catch (error) {
+    console.error("Error fetching routes:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+}
+
+export const deleteRoutes = async (req: Request, res: Response) => {
+  try {
+    const { id: ids } = req.body
+
+    const routes = await prisma.routeList.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    })
+
+    if (routes.length === 0) {
+      return res.status(404).json({ error: "Routes do not exist", success: false });
+    }
+
+    await prisma.routeList.deleteMany({
+      where: {
+        id: {
+          in: ids
+        },
+        isUsed: false
+      }
+    })
+
+    res
+      .status(200)
+      .json({ message: "Routes Deleted Successfully", success: true });
+  } catch (error) {
+    console.error("Error fetching routes:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+}

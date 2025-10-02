@@ -5,6 +5,8 @@ import verifyAccount from "../../middleware/verifyMiddleware";
 
 import {
   createRoute,
+  deleteRoutes,
+  getAllRoutes,
   getRoutes,
 } from "../../controllers/route-list/route-list.controller";
 
@@ -24,5 +26,21 @@ router.get(
   authorizeRoles("admin"),
   getRoutes
 );
+
+router.get(
+  "/get/all",
+  verifyToken,
+  verifyAccount,
+  authorizeRoles("admin"),
+  getAllRoutes
+)
+
+router.delete(
+  "/delete",
+  verifyToken,
+  verifyAccount,
+  authorizeRoles("admin"),
+  deleteRoutes
+)
 
 export default router;

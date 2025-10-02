@@ -6,6 +6,7 @@ import verifyAccount from "../../middleware/verifyMiddleware";
 import {
   createRouteComponentRecommendation,
   getRouteComponentRecommendations,
+  updateLatestRouteComponentRecommendation,
 } from "../../controllers/route-list/route-component-recommendation.controller";
 
 const router = Router();
@@ -23,6 +24,13 @@ router.get(
   verifyAccount,
   authorizeRoles("admin", "user"),
   getRouteComponentRecommendations
+);
+router.put(
+  "/update",
+  verifyToken,
+  verifyAccount,
+  authorizeRoles("admin"),
+  updateLatestRouteComponentRecommendation
 );
 
 export default router;

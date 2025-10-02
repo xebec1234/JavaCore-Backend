@@ -71,3 +71,55 @@ export const getRouteComponentRecommendations = async (
       .json({ message: "Internal server error", success: false });
   }
 };
+
+// UPDATE latest Recommendation to specific routecomponent
+export const updateLatestRouteComponentRecommendation = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { routeComponentId, priority, recommendation } = req.body;
+
+    if (!routeComponentId || !priority || !recommendation) {
+      return res
+        .status(400)
+        .json({ message: "Missing required fields", success: false });
+    }
+
+    const latestRecommendationt = await prisma.routeComponentRecommendation.findFirst({
+      where: { routeComponentId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!latestRecommendationt) {
+      return res.status(404).json({
+        message: "No recommendation found for this route component",
+        success: false,
+      });
+    }
+
+    // Update the latest recommendation
+    const updatedRecommendation = await prisma.routeComponentRecommendation.update({
+      where: { id: latestRecommendationt.id },
+      data: {
+        priority,
+        recommendation,
+        createdAt: new Date(), 
+      },
+    });
+
+    return res.status(200).json({
+      message: "Latest recommendation updated successfully",
+      data: updatedRecommendation,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error updating latest recommendation:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+

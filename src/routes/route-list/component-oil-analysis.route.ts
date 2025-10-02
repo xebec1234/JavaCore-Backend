@@ -6,6 +6,7 @@ import verifyAccount from "../../middleware/verifyMiddleware";
 import {
   getRouteComponentOilAnalyses,
   createRouteComponentOilAnalysis,
+  updateLatestRouteComponentOilAnalyses,
 } from "../../controllers/route-list/component-oil-analysis.controller";
 
 const router = Router();
@@ -23,6 +24,13 @@ router.get(
   verifyAccount,
   authorizeRoles("admin", "user"),
   getRouteComponentOilAnalyses
+);
+router.put(
+  "/update",
+  verifyToken,
+  verifyAccount,
+  authorizeRoles("admin"),
+  updateLatestRouteComponentOilAnalyses
 );
 
 export default router;

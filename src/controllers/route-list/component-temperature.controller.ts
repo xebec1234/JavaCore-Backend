@@ -105,7 +105,7 @@ export const updateLatestRouteComponentTemperature = async (
     }
 
     // Update the latest temperature
-    const updatedComment = await prisma.routeComponentTemperature.update({
+    const updatedTemperature = await prisma.routeComponentTemperature.update({
       where: { id: latestTemperature.id },
       data: {
         temperature,
@@ -115,7 +115,7 @@ export const updateLatestRouteComponentTemperature = async (
 
     return res.status(200).json({
       message: "Latest temperature updated successfully",
-      data: updatedComment,
+      data: updatedTemperature,
       success: true,
     });
   } catch (error) {

@@ -6,6 +6,7 @@ import verifyAccount from "../../middleware/verifyMiddleware";
 import {
   getRouteComponentTemperatures,
   createRouteComponentTemperature,
+  updateLatestRouteComponentTemperature
 } from "../../controllers/route-list/component-temperature.controller";
 
 const router = Router();
@@ -23,6 +24,13 @@ router.get(
   verifyAccount,
   authorizeRoles("admin", "user"),
   getRouteComponentTemperatures
+);
+router.put(
+  "/update",
+  verifyToken,
+  verifyAccount,
+  authorizeRoles("admin"),
+  updateLatestRouteComponentTemperature
 );
 
 export default router;

@@ -77,3 +77,54 @@ export const getRouteComponentTemperatures = async (
     });
   }
 };
+
+// UPDATE latest temperature to specific routecomponent
+export const updateLatestRouteComponentTemperature = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { routeComponentId, temperature } = req.body;
+
+    if (!routeComponentId || !temperature) {
+      return res
+        .status(400)
+        .json({ message: "Missing required fields", success: false });
+    }
+
+    const latestTemperature = await prisma.routeComponentTemperature.findFirst({
+      where: { routeComponentId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!latestTemperature) {
+      return res.status(404).json({
+        message: "No temperature found for this route component",
+        success: false,
+      });
+    }
+
+    // Update the latest temperature
+    const updatedComment = await prisma.routeComponentTemperature.update({
+      where: { id: latestTemperature.id },
+      data: {
+        temperature,
+        createdAt: new Date(), 
+      },
+    });
+
+    return res.status(200).json({
+      message: "Latest temperature updated successfully",
+      data: updatedComment,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error updating latest temperature:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+

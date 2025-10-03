@@ -1,9 +1,12 @@
 import prisma from "../prisma/prisma";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { createJobSchema } from "../types/validator";
+import z from "zod";
 
 export const createJob = async (req: Request, res: Response) => {
   try {
+    const parsed = createJobSchema.parse(req.body);
     const {
       client,
       area,
@@ -19,7 +22,7 @@ export const createJob = async (req: Request, res: Response) => {
       equipmentUse,
       dateRegistered,
       yearWeekNo,
-    } = req.body;
+    } = parsed
 
     await prisma.job.create({
       data: {
@@ -53,6 +56,12 @@ export const createJob = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: "Job Created Successfully", success: true });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+        return res.status(400).json({
+            success: false,
+            error: "Invalid Data Input"
+        });
+    }
     console.error(error);
     res.status(500).json({ error: "Internal Server Error", success: false });
   }

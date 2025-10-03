@@ -4,10 +4,15 @@ import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import { generateOtp } from "../generated/generateOtp";
+import { loginSchema } from "../types/validator";
+import z from "zod";
 
 export const login = async (req: Request, res: Response) => {
     try {
-        const { email, password, device } = req.body
+        const parsed = loginSchema.parse(req.body);
+
+        const { email, password, device } = parsed
+        
         const otp = await generateOtp()
 
         const SECRET_KEY = process.env.SECRET_KEY
@@ -24,7 +29,7 @@ export const login = async (req: Request, res: Response) => {
             where: { userId: user.id, userAgent: device },
         })
 
-        if (!isDeviceVerified || user.emailVerified) {
+        if (!isDeviceVerified && user.emailVerified) {
             await prisma.user.update({
                 where: { id: user.id },
                 data: {
@@ -90,6 +95,12 @@ export const login = async (req: Request, res: Response) => {
         
         res.status(200).json({ user: updatedUser, message: "Login Successfull!", success: true })
     } catch (error) {
+        if (error instanceof z.ZodError) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid Data Input"
+            });
+        }
         console.error(error);
         res.status(500).json({ error: "Internal Server Error", success: false });
     }

@@ -3,10 +3,20 @@ import verifyToken from "../../middleware/authMiddleware";
 import authorizeRoles from "../../middleware/roleMiddleware";
 import verifyAccount from "../../middleware/verifyMiddleware";
 
-import { getComponentClientAction } from "../../controllers/route-list/component-client-action.controller";
+import {
+  createComponentClientAction,
+  getComponentClientAction,
+} from "../../controllers/route-list/component-client-action.controller";
 
 const router = Router();
 
+router.post(
+  "/create",
+  verifyToken,
+  verifyAccount,
+  authorizeRoles("user"),
+  createComponentClientAction
+);
 router.get(
   "/get",
   verifyToken,

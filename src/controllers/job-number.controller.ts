@@ -84,6 +84,7 @@ export const getClientJobsBySearch = async (req: Request, res: Response) => {
         area: true,
         jobNumber: true,
         yearWeekNumber: true,
+        analyst: true,
         reviewer: true,
         poNumber: true,
         woNumber: true,
@@ -101,7 +102,7 @@ export const getClientJobsBySearch = async (req: Request, res: Response) => {
           },
         },
         reportIntroduction: true,
-        status: true,
+        status: true
       },
     });
 

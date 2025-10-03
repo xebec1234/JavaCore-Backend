@@ -101,6 +101,7 @@ export const getClientJobsBySearch = async (req: Request, res: Response) => {
           },
         },
         reportIntroduction: true,
+        status: true,
       },
     });
 

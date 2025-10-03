@@ -1,5 +1,60 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
+import jwt from "jsonwebtoken";
+
+export const createComponentAnalystNote = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { routeComponentId, note, analyst } = req.body;
+
+    if (!routeComponentId || !note || !analyst) {
+      return res.status(400).json({
+        message: "Missing required fields",
+        success: false,
+      });
+    }
+
+    // Get token from cookies
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(400).json({ message: "Token Expired", success: false });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.SECRET_KEY as string);
+
+    if (typeof decoded === "string" || !decoded || !("id" in decoded)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid Token Payload", success: false });
+    }
+
+    // Create new RouteComponentAnalystNote
+    const newNote = await prisma.routeComponentNote.create({
+      data: {
+        clientId: (decoded as any).id,
+        routeComponentId,
+        note,
+        analyst,
+      },
+    });
+
+    return res.status(201).json({
+      message: "Successfully created analyst note",
+      data: newNote,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error creating analyst note:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
 
 export const getComponentAnalystNote = async (req: Request, res: Response) => {
   try {

@@ -153,6 +153,42 @@ export const updateJob = async (req: Request, res: Response) => {
   }
 };
 
+export const clienUpdateJob = async (req: Request, res: Response) => {
+  try {
+    const { status, analyst, reviewer, id, route } = req.body;
+
+    const dateFinished = status === "Report Submitted" ? new Date() : undefined;
+
+    await prisma.job.update({
+      where: {
+        id,
+      },
+      data: {
+        analyst,
+        reviewer,
+      },
+    });
+
+    if (dateFinished) {
+      await prisma.routeList.update({
+        where: {
+          id: route,
+        },
+        data: {
+          isUsed: false,
+        },
+      });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Client Job Updated Successfully", success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
 export const deleteJobs = async (req: Request, res: Response) => {
   try {
     const { id: ids } = req.body;

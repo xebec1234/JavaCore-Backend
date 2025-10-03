@@ -8,6 +8,7 @@ import {
   getJobs,
   getJobById,
   updateJob,
+  clienUpdateJob,
   getUserJobs,
 } from "../controllers/job.controller";
 
@@ -40,6 +41,13 @@ router.patch(
   verifyAccount,
   authorizeRoles("admin"),
   updateJob
+);
+router.patch(
+  "/client-update",
+  verifyToken,
+  verifyAccount,
+  authorizeRoles("user"),
+  clienUpdateJob
 );
 router.delete(
   "/delete",

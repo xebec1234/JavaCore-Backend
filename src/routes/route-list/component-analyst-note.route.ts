@@ -3,10 +3,20 @@ import verifyToken from "../../middleware/authMiddleware";
 import authorizeRoles from "../../middleware/roleMiddleware";
 import verifyAccount from "../../middleware/verifyMiddleware";
 
-import { getComponentAnalystNote } from "../../controllers/route-list/component-analyst-note.controller";
+import {
+  createComponentAnalystNote,
+  getComponentAnalystNote,
+} from "../../controllers/route-list/component-analyst-note.controller";
 
 const router = Router();
 
+router.post(
+  "/create",
+  verifyToken,
+  verifyAccount,
+  authorizeRoles("user"),
+  createComponentAnalystNote
+);
 router.get(
   "/get",
   verifyToken,

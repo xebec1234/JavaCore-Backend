@@ -32,7 +32,7 @@ export const createComponentClientAction = async (
         .json({ message: "Invalid Token Payload", success: false });
     }
 
-    // ✅ Create new RouteComponentAction
+    //Create new RouteComponentAction
     const newAction = await prisma.routeComponentAction.create({
       data: {
         clientId: (decoded as any).id,

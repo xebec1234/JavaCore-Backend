@@ -1,20 +1,16 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
 import jwt from "jsonwebtoken";
+import { createActionSchema } from "../../types/validator";
+import z from "zod";
 
 export const createComponentClientAction = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { routeComponentId, action, woNumber } = req.body;
-
-    if (!routeComponentId || !woNumber || !action) {
-      return res.status(400).json({
-        message: "Missing required fields",
-        success: false,
-      });
-    }
+    const parsed = createActionSchema.parse(req.body);
+    const { routeComponentId, action, woNumber } = parsed;
 
     // Get token from cookies
     const token = req.cookies.token;
@@ -48,6 +44,12 @@ export const createComponentClientAction = async (
       success: true,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Data Input",
+      });
+    }
     console.error("Error creating client action:", error);
     return res.status(500).json({
       message: "Internal Server Error",

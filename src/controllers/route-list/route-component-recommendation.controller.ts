@@ -1,17 +1,15 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
+import { createRecommendationSchema } from "../../types/validator";
+import z from "zod";
 
 export const createRouteComponentRecommendation = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { routeComponentId, priority, recommendation } = req.body;
-    if (!routeComponentId || !priority || !recommendation) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields", success: false });
-    }
+    const parsed = createRecommendationSchema.parse(req.body);
+    const { routeComponentId, priority, recommendation } = parsed;
 
     const newRecommendation = await prisma.routeComponentRecommendation.create({
       data: {
@@ -27,6 +25,12 @@ export const createRouteComponentRecommendation = async (
       data: newRecommendation,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Data Input",
+      });
+    }
     console.error("Error creating recommendation:", error);
     return res
       .status(500)
@@ -57,13 +61,11 @@ export const getRouteComponentRecommendations = async (
       },
     });
 
-    return res
-      .status(200)
-      .json({
-        message: "Recommendations fetched successfully",
-        success: true,
-        data: recommendations,
-      });
+    return res.status(200).json({
+      message: "Recommendations fetched successfully",
+      success: true,
+      data: recommendations,
+    });
   } catch (error) {
     console.error("Error fetching recommendations:", error);
     return res
@@ -86,10 +88,11 @@ export const updateLatestRouteComponentRecommendation = async (
         .json({ message: "Missing required fields", success: false });
     }
 
-    const latestRecommendationt = await prisma.routeComponentRecommendation.findFirst({
-      where: { routeComponentId },
-      orderBy: { createdAt: "desc" },
-    });
+    const latestRecommendationt =
+      await prisma.routeComponentRecommendation.findFirst({
+        where: { routeComponentId },
+        orderBy: { createdAt: "desc" },
+      });
 
     if (!latestRecommendationt) {
       return res.status(404).json({
@@ -99,14 +102,15 @@ export const updateLatestRouteComponentRecommendation = async (
     }
 
     // Update the latest recommendation
-    const updatedRecommendation = await prisma.routeComponentRecommendation.update({
-      where: { id: latestRecommendationt.id },
-      data: {
-        priority,
-        recommendation,
-        createdAt: new Date(), 
-      },
-    });
+    const updatedRecommendation =
+      await prisma.routeComponentRecommendation.update({
+        where: { id: latestRecommendationt.id },
+        data: {
+          priority,
+          recommendation,
+          createdAt: new Date(),
+        },
+      });
 
     return res.status(200).json({
       message: "Latest recommendation updated successfully",
@@ -121,5 +125,3 @@ export const updateLatestRouteComponentRecommendation = async (
     });
   }
 };
-
-

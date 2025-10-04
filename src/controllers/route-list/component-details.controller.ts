@@ -1,18 +1,16 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
+import { createDetailschema } from "../../types/validator";
+import z from "zod";
 
 export const createRouteComponentDetails = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { routeComponentId, clientId, header, value } = req.body;
-    console.log("req.body:", req.body);
-    if (!clientId || !header || !value) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields", success: false });
-    }
+    console.log(req.body);
+    const parsed = createDetailschema.parse(req.body);
+    const { routeComponentId, clientId, header, value } = parsed;
 
     const routeComponent = await prisma.routeComponent.findUnique({
       where: { id: routeComponentId },
@@ -25,16 +23,15 @@ export const createRouteComponentDetails = async (
       });
     }
 
-    const newDetails = await prisma.routeComponentDetails.create({
-      data: {
-        clientId: clientId,
-        routeComponentId: routeComponentId,
-        header,
-        value,
-      },
-    });
 
-    console.log("Created data:", newDetails);
+      const newDetails = await prisma.routeComponentDetails.create({
+        data: {
+          clientId: clientId,
+          routeComponentId: routeComponentId,
+          header,
+          value,
+        },
+      });
 
     return res.status(201).json({
       message: "Details added successfully",
@@ -42,6 +39,12 @@ export const createRouteComponentDetails = async (
       success: true,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Data Input",
+      });
+    }
     console.error("Error creating details:", error);
     return res.status(500).json({
       message: "Internal Server Error",

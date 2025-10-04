@@ -25,6 +25,18 @@ export const createJobSchema = z.object({
   yearWeekNo: z.string().min(1, "Year-week number is required"),
 });
 
+export const createCommentSchema = z.object({
+  routeComponentId: z.string(),
+  severity: z.string().min(1, "Severity is required"),
+  comment: z.string().min(1, "Comment is required"),
+});
+
+export const createRecommendationSchema = z.object({
+  routeComponentId: z.string(),
+  priority: z.string().min(1, "Priority is required"),
+  recommendation: z.string().min(1, "Recommendation is required"),
+});
+
 export const createAnalystNoteSchema = z.object({
   routeComponentId: z.string().min(1, "Component ID is required"),
   note: z.string().min(1, "Note is required"),
@@ -37,9 +49,25 @@ export const createActionSchema = z.object({
   woNumber: z.string().min(1, "WO Number is required"),
 });
 
+export const createTemperatureSchema = z.object({
+  routeComponentId: z.string(),
+  temperature: z
+    .number()
+    .min(-100, { message: "Temperature cannot be below -100°C" })
+    .max(1000, { message: "Temperature cannot exceed 1000°C" }),
+});
+
+export const createOilAnalysisSchema = z.object({
+  routeComponentId: z.string(),
+  analysis: z
+    .enum(["Normal", "Moderate", "Severe", "Critical", "Missed Points"])
+    .describe("Choose a valid oil state!"),
+});
+
 export const createDetailschema = z.object({
   clientId: z.string(),
   routeComponentId: z.string(),
   header: z.string().min(1, "Header is required"),
   value: z.string().min(1, "Value is required"),
 });
+

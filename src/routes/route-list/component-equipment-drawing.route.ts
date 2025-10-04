@@ -7,8 +7,8 @@ import verifyAccount from "../../middleware/verifyMiddleware";
 
 const router = Router();
 
-router.post("/create", verifyToken, verifyAccount, authorizeRoles("admin"), upload.array("files"), createEquipmentDrawing)
-router.get("/get", verifyToken, verifyAccount, authorizeRoles("admin"), getEquipmentDrawing)
-router.delete("/delete/:id", verifyToken, verifyAccount, authorizeRoles("admin"), deleteEquipmentDrawing)
+router.post("/create", verifyToken, verifyAccount, authorizeRoles("admin", "user"), upload.array("files"), createEquipmentDrawing)
+router.get("/get", verifyToken, verifyAccount, authorizeRoles("admin", "user"), getEquipmentDrawing)
+router.delete("/delete/:id", verifyToken, verifyAccount, authorizeRoles("admin", "user"), deleteEquipmentDrawing)
 
 export default router;

@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
+import { createCommentSchema } from "../../types/validator";
+import z from "zod";
 
 // Adding new comment to specific routecomponent
 export const createRouteComponentComment = async (
@@ -7,13 +9,8 @@ export const createRouteComponentComment = async (
   res: Response
 ) => {
   try {
-    const { routeComponentId, severity, comment } = req.body;
-
-    if (!routeComponentId || !severity || !comment) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields", success: false });
-    }
+    const parsed = createCommentSchema.parse(req.body);
+    const { routeComponentId, severity, comment } = parsed;
 
     const newComment = await prisma.routeComponentComment.create({
       data: {
@@ -29,6 +26,12 @@ export const createRouteComponentComment = async (
       success: true,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Data Input",
+      });
+    }
     console.error("Error creating comment:", error);
     return res.status(500).json({
       message: "Internal Server Error",
@@ -113,7 +116,7 @@ export const updateLatestRouteComponentComment = async (
       data: {
         severity,
         comment,
-        createdAt: new Date(), 
+        createdAt: new Date(),
       },
     });
 
@@ -130,4 +133,3 @@ export const updateLatestRouteComponentComment = async (
     });
   }
 };
-

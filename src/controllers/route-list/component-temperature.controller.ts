@@ -1,18 +1,15 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
+import { createTemperatureSchema } from "../../types/validator";
+import z from "zod";
 
 export const createRouteComponentTemperature = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { routeComponentId, temperature } = req.body;
-
-    if (!routeComponentId || !temperature) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields", success: false });
-    }
+    const parsed = createTemperatureSchema.parse(req.body);
+    const { routeComponentId, temperature } = parsed;
 
     const newTemperature = await prisma.routeComponentTemperature.create({
       data: {
@@ -27,6 +24,12 @@ export const createRouteComponentTemperature = async (
       success: true,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Data Input",
+      });
+    }
     console.error("Error creating temperature:", error);
     return res.status(500).json({
       message: "Internal Server Error",
@@ -109,7 +112,7 @@ export const updateLatestRouteComponentTemperature = async (
       where: { id: latestTemperature.id },
       data: {
         temperature,
-        createdAt: new Date(), 
+        createdAt: new Date(),
       },
     });
 
@@ -126,5 +129,3 @@ export const updateLatestRouteComponentTemperature = async (
     });
   }
 };
-
-

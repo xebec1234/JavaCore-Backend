@@ -80,13 +80,8 @@ export const updateLatestRouteComponentRecommendation = async (
   res: Response
 ) => {
   try {
-    const { routeComponentId, priority, recommendation } = req.body;
-
-    if (!routeComponentId || !priority || !recommendation) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields", success: false });
-    }
+    const parsed = createRecommendationSchema.parse(req.body);
+    const { routeComponentId, priority, recommendation } = parsed;
 
     const latestRecommendationt =
       await prisma.routeComponentRecommendation.findFirst({
@@ -118,6 +113,12 @@ export const updateLatestRouteComponentRecommendation = async (
       success: true,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Data Input",
+      });
+    }
     console.error("Error updating latest recommendation:", error);
     return res.status(500).json({
       message: "Internal Server Error",

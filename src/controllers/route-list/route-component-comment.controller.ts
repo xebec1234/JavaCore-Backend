@@ -90,13 +90,8 @@ export const updateLatestRouteComponentComment = async (
   res: Response
 ) => {
   try {
-    const { routeComponentId, severity, comment } = req.body;
-
-    if (!routeComponentId || !severity || !comment) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields", success: false });
-    }
+    const parsed = createCommentSchema.parse(req.body);
+    const { routeComponentId, severity, comment } = parsed;
 
     const latestComment = await prisma.routeComponentComment.findFirst({
       where: { routeComponentId },
@@ -126,6 +121,12 @@ export const updateLatestRouteComponentComment = async (
       success: true,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Data Input",
+      });
+    }
     console.error("Error updating latest comment:", error);
     return res.status(500).json({
       message: "Internal Server Error",

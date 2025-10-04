@@ -1,20 +1,16 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
 import jwt from "jsonwebtoken";
+import { createAnalystNoteSchema } from "../../types/validator";
+import z from "zod";
 
 export const createComponentAnalystNote = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const { routeComponentId, note, analyst } = req.body;
-
-    if (!routeComponentId || !note || !analyst) {
-      return res.status(400).json({
-        message: "Missing required fields",
-        success: false,
-      });
-    }
+    const parsed = createAnalystNoteSchema.parse(req.body);
+    const { routeComponentId, note, analyst } = parsed;
 
     // Get token from cookies
     const token = req.cookies.token;
@@ -48,6 +44,12 @@ export const createComponentAnalystNote = async (
       success: true,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Data Input",
+      });
+    }
     console.error("Error creating analyst note:", error);
     return res.status(500).json({
       message: "Internal Server Error",

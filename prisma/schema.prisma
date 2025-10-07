@@ -20,6 +20,7 @@ model User {
   otpCooldown           DateTime?
   otpExpires            DateTime?
   otp                   Int?
+  passwordChanged       Boolean                 @default(false)
   RouteComponentFigures RouteComponentFigures[]
   verifiedDevices       VerifiedDevice[]
   jobs                  Job[]

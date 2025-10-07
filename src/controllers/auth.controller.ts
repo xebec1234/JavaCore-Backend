@@ -72,7 +72,14 @@ export const login = async (req: Request, res: Response) => {
 
         const refreshToken = jwt.sign({id: user.id}, process.env.REFRESH_SECRET_KEY, { expiresIn: "7d"});
 
-        const { id: _id, password: _password, image: _image, otp: _otp, otpExpires: _otpExpires, otpCooldown: _otpCooldown,...safeUser } = user;
+        const { 
+            id: _id, 
+            password: _password, 
+            image: _image, otp: _otp, 
+            otpExpires: _otpExpires, 
+            otpCooldown: _otpCooldown,
+            ...safeUser 
+        } = user;
 
         const updatedUser: typeof safeUser & { deviceVerified: boolean } = {
             ...safeUser,
@@ -144,7 +151,15 @@ export const refreshToken = async (req: Request, res: Response) => {
             maxAge: 60 * 60 * 1000,
         });
         
-        const { id: _id, password: _password, image: _image, otp: _otp, otpExpires: _otpExpires, otpCooldown: _otpCooldown,...safeUser } = user;
+        const { 
+            id: _id, 
+            password: _password, 
+            image: _image, 
+            otp: _otp, 
+            otpExpires: _otpExpires, 
+            otpCooldown: _otpCooldown, 
+            ...safeUser 
+        } = user;
 
         const updatedUser: typeof safeUser & { deviceVerified: boolean } = {
             ...safeUser,

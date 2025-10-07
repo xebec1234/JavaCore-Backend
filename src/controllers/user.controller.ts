@@ -100,7 +100,15 @@ export const getCurrentUser = async (req: Request, res: Response) => {
         })
         
 
-        const { id: _id, password: _password, image: _image, otp: _otp, otpExpires: _otpExpires, otpCooldown: _otpCooldown,...safeUser } = user;
+        const { 
+          id: _id, 
+          password: _password, 
+          image: _image, 
+          otp: _otp, 
+          otpExpires: _otpExpires, 
+          otpCooldown: _otpCooldown,
+          ...safeUser 
+        } = user;
 
         const updatedUser: typeof safeUser & { deviceVerified: boolean } = {
             ...safeUser,
@@ -166,6 +174,7 @@ export const changePassword = async (req: Request, res: Response) => {
       },
       data: {
         password: hashedNewPassword,
+        passwordChanged: true
       },
     });
 

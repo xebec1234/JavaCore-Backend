@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
-import { createRecommendationSchema } from "../../types/validator";
+import { recommendationSchema } from "../../types/validator";
 import z from "zod";
 
 export const createRouteComponentRecommendation = async (
@@ -8,7 +8,7 @@ export const createRouteComponentRecommendation = async (
   res: Response
 ) => {
   try {
-    const parsed = createRecommendationSchema.parse(req.body);
+    const parsed = recommendationSchema.parse(req.body);
     const { routeComponentId, priority, recommendation } = parsed;
 
     const newRecommendation = await prisma.routeComponentRecommendation.create({
@@ -80,7 +80,7 @@ export const updateLatestRouteComponentRecommendation = async (
   res: Response
 ) => {
   try {
-    const parsed = createRecommendationSchema.parse(req.body);
+    const parsed = recommendationSchema.parse(req.body);
     const { routeComponentId, priority, recommendation } = parsed;
 
     const latestRecommendationt =

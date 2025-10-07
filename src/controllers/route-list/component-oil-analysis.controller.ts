@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
-import { createOilAnalysisSchema } from "../../types/validator";
+import { oilAnalysisSchema } from "../../types/validator";
 import z from "zod";
 
 export const createRouteComponentOilAnalysis = async (
@@ -8,7 +8,7 @@ export const createRouteComponentOilAnalysis = async (
   res: Response
 ) => {
   try {
-    const parsed = createOilAnalysisSchema.parse(req.body);
+    const parsed = oilAnalysisSchema.parse(req.body);
     const { routeComponentId, analysis } = parsed;
 
     const newOilAnalysis = await prisma.routeComponentOilAnalysis.create({
@@ -87,13 +87,8 @@ export const updateLatestRouteComponentOilAnalyses = async (
   res: Response
 ) => {
   try {
-    const { routeComponentId, analysis } = req.body;
-
-    if (!routeComponentId || !analysis) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields", success: false });
-    }
+    const parsed = oilAnalysisSchema.parse(req.body);
+    const { routeComponentId, analysis } = parsed;
 
     const latestOilAnalysis = await prisma.routeComponentOilAnalysis.findFirst({
       where: { routeComponentId },
@@ -122,6 +117,12 @@ export const updateLatestRouteComponentOilAnalyses = async (
       success: true,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Data Input",
+      });
+    }
     console.error("Error updating latest oil analysis:", error);
     return res.status(500).json({
       message: "Internal Server Error",

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
-import { createDetailschema } from "../../types/validator";
+import { detailschema } from "../../types/validator";
 import z from "zod";
 
 export const createRouteComponentDetails = async (
@@ -9,7 +9,7 @@ export const createRouteComponentDetails = async (
 ) => {
   try {
     console.log(req.body);
-    const parsed = createDetailschema.parse(req.body);
+    const parsed = detailschema.parse(req.body);
     const { routeComponentId, clientId, header, value } = parsed;
 
     const routeComponent = await prisma.routeComponent.findUnique({
@@ -23,15 +23,14 @@ export const createRouteComponentDetails = async (
       });
     }
 
-
-      const newDetails = await prisma.routeComponentDetails.create({
-        data: {
-          clientId: clientId,
-          routeComponentId: routeComponentId,
-          header,
-          value,
-        },
-      });
+    const newDetails = await prisma.routeComponentDetails.create({
+      data: {
+        clientId: clientId,
+        routeComponentId: routeComponentId,
+        header,
+        value,
+      },
+    });
 
     return res.status(201).json({
       message: "Details added successfully",
@@ -96,15 +95,13 @@ export const updateRouteComponentDetails = async (
   res: Response
 ) => {
   try {
-    const { id } = req.params;
-    const { header, value } = req.body;
+    const parsed = detailschema.parse({
+      id: req.params.id,
+      header: req.body.header,
+      value: req.body.value,
+    });
 
-    if (!header && !value) {
-      return res.status(400).json({
-        message: "Nothing to update",
-        success: false,
-      });
-    }
+   const { id, header, value } = parsed;
 
     const updated = await prisma.routeComponentDetails.update({
       where: { id },

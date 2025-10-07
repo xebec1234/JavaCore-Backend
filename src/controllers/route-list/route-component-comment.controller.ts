@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../../prisma/prisma";
-import { createCommentSchema } from "../../types/validator";
+import { commentSchema } from "../../types/validator";
 import z from "zod";
 
 // Adding new comment to specific routecomponent
@@ -9,7 +9,7 @@ export const createRouteComponentComment = async (
   res: Response
 ) => {
   try {
-    const parsed = createCommentSchema.parse(req.body);
+    const parsed = commentSchema.parse(req.body);
     const { routeComponentId, severity, comment } = parsed;
 
     const newComment = await prisma.routeComponentComment.create({
@@ -90,7 +90,7 @@ export const updateLatestRouteComponentComment = async (
   res: Response
 ) => {
   try {
-    const parsed = createCommentSchema.parse(req.body);
+    const parsed = commentSchema.parse(req.body);
     const { routeComponentId, severity, comment } = parsed;
 
     const latestComment = await prisma.routeComponentComment.findFirst({
